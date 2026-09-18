@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ilink-website-582.pages.dev/sitemap.xml
