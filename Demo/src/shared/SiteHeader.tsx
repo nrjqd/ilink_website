@@ -75,6 +75,7 @@ export function SiteHeader({ currentPath }: SiteHeaderProps) {
           width="209"
           height="80"
           decoding="async"
+          disableAutoCrossOrigin
         />
       </a>
       <button
