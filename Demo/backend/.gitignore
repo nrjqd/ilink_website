@@ -1,0 +1,15 @@
+.env
+.env.local
+.env.production
+.env.*.local
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+*.db
+*.sqlite
+*.sqlite3
+uploads/

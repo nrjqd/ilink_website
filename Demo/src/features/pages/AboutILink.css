@@ -1,0 +1,462 @@
+/* 中文註解：關於頁專用樣式，定義品牌介紹頁的區塊與響應式排版。 */
+
+/* 詳細註解：.about-i-link 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.about-i-link {
+  background:
+    linear-gradient(90deg, rgb(208 185 71 / 7%) 0 1px, transparent 1px 100%) 0 0 / 84px 84px,
+    var(--paper);
+  color: var(--green);
+}
+
+/* 詳細註解：.about-section 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.about-section {
+  border-top: 1px solid var(--line);
+  padding: clamp(82px, 10vw, 128px) 0;
+}
+
+/* 詳細註解：.about-section:first-child 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.about-section:first-child {
+  border-top: 0;
+}
+
+/* 詳細註解：.about-container 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.about-container {
+  width: min(100% - var(--timeline-gutter) * 2, var(--timeline-max-width));
+  margin: 0 auto;
+}
+
+.intro-grid,
+.values-grid,
+.plan-grid,
+/* 詳細註解：.partners-grid 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.partners-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.42fr) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 86px);
+  align-items: start;
+}
+
+/* 詳細註解：.intro-grid 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.intro-grid {
+  grid-template-columns: minmax(240px, 0.34fr) minmax(300px, 0.42fr) minmax(260px, 0.34fr);
+  align-items: center;
+}
+
+/* 詳細註解：.section-heading 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.section-heading {
+  min-width: 0;
+}
+
+/* 詳細註解：.section-eyebrow 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.section-eyebrow {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+/* 詳細註解：.section-heading h2 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.section-heading h2 {
+  margin: 0;
+  color: var(--green);
+  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  font-size: clamp(42px, 5.6vw, 78px);
+  line-height: 1.12;
+  letter-spacing: 0;
+}
+
+/* 詳細註解：.intro-copy 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.intro-copy {
+  min-width: 0;
+  border-left: 4px solid var(--gold);
+  padding-left: clamp(22px, 3vw, 34px);
+}
+
+/* 詳細註解：.intro-copy p 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.intro-copy p {
+  margin: 0;
+  color: rgb(53 68 76 / 78%);
+  font-size: clamp(16px, 1.3vw, 18px);
+  line-height: 2;
+}
+
+/* 詳細註解：.intro-copy p + p 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.intro-copy p + p {
+  margin-top: 18px;
+}
+
+/* 詳細註解：.intro-image-wrap 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.intro-image-wrap {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+}
+
+/* 詳細註解：.intro-image-wrap img 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+/* 詳細註解：.intro-image-wrap img 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+
+.intro-image-wrap img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border: 1px solid rgb(53 68 76 / 14%);
+  border-radius: 30% 12% 25% 14% / 15% 30% 18% 28%;
+  object-fit: cover;
+  object-position: 34% center;
+  box-shadow: 0 30px 88px rgb(53 68 76 / 15%);
+}
+
+/* 詳細註解：.intro-dot 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.intro-dot {
+  position: absolute;
+  right: -18px;
+  bottom: -18px;
+  width: 76px;
+  height: 76px;
+  border: 10px solid var(--paper);
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 18px 44px rgb(53 68 76 / 12%);
+}
+
+/* 詳細註解：.values-list 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.values-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-width: 0;
+  border-left: 1px solid var(--line);
+}
+
+/* 詳細註解：.value-card 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.value-card {
+  position: relative;
+  min-height: 270px;
+  border-right: 1px solid var(--line);
+  padding: 28px 22px 26px;
+}
+
+/* 詳細註解：.value-dot 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.value-dot {
+  display: block;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 28px;
+  border-radius: 50%;
+}
+
+/* 詳細註解：.value-dot--gold 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.value-dot--gold {
+  background: var(--gold);
+}
+
+/* 詳細註解：.value-dot--gray 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.value-dot--gray {
+  background: var(--gray);
+}
+
+/* 詳細註解：.value-dot--pink 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.value-dot--pink {
+  background: var(--pink);
+}
+
+/* 詳細註解：.value-dot--green 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.value-dot--green {
+  background: var(--green);
+}
+
+/* 詳細註解：.value-card h3 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.value-card h3 {
+  margin: 0 0 12px;
+  color: var(--green);
+  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  font-size: clamp(24px, 2.3vw, 34px);
+  line-height: 1.2;
+}
+
+/* 詳細註解：.plan-timeline-item h3 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.plan-timeline-item h3 {
+  margin: 0 0 14px;
+  width: 100%;
+  color: var(--green);
+  font-family: "Noto Serif TC", "Source Han Serif TC", serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  word-break: keep-all;
+  writing-mode: horizontal-tb;
+}
+
+/* 詳細註解：.value-card p 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.value-card p {
+  margin: 0;
+  color: rgb(53 68 76 / 72%);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* 詳細註解：.plan-timeline-item p 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.plan-timeline-item p {
+  width: 100%;
+  max-width: 180px;
+  margin: 0 auto;
+  color: rgb(53 68 76 / 72%);
+  font-size: 14px;
+  line-height: 1.9;
+  overflow-wrap: break-word;
+  word-break: normal;
+  writing-mode: horizontal-tb;
+}
+
+/* 詳細註解：.plan-timeline 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.plan-timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 48px);
+  width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+
+/* 詳細註解：.plan-timeline-item 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.plan-timeline-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  gap: 0;
+  border-top: 2px solid var(--line);
+  padding-top: 30px;
+  text-align: center;
+}
+
+/* 詳細註解：.plan-timeline-item::before 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.plan-timeline-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* 詳細註解：.plan-timeline-number 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.plan-timeline-number {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 24px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--paper);
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.plan-timeline-number--yellow,
+/* 詳細註解：.plan-timeline-number--gold 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.plan-timeline-number--gold {
+  background: #d0b947;
+  color: white;
+}
+
+.plan-timeline-number--dark,
+/* 詳細註解：.plan-timeline-number--green 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.plan-timeline-number--green {
+  background: #35444c;
+  color: white;
+}
+
+/* 詳細註解：.plan-timeline-number--pink 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.plan-timeline-number--pink {
+  background: #e4d5cc;
+  color: #35444c;
+}
+
+/* 詳細註解：.plan-timeline-number--gray 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.plan-timeline-number--gray {
+  background: #ced2d1;
+  color: #35444c;
+}
+
+/* 詳細註解：.partners-list 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.partners-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  min-width: 0;
+  border-left: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+}
+
+.partner-item,
+/* 詳細註解：.partner-more 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.partner-more {
+  display: grid;
+  min-height: 176px;
+  align-content: center;
+  justify-items: center;
+  gap: 16px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 22px 16px;
+  text-align: center;
+}
+
+/* 詳細註解：.partner-item img 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.partner-item img {
+  width: 86px;
+  max-width: 70%;
+  height: 86px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.partner-item img.partner-image--contain {
+  border-radius: 0;
+  object-fit: contain;
+}
+
+.partner-item img.partner-image--cover {
+  object-fit: cover;
+}
+
+.partner-item > span,
+/* 詳細註解：.partner-more span 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.partner-more span {
+  color: rgb(53 68 76 / 72%);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+/* 詳細註解：.partner-more 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.partner-more {
+  background: rgb(208 185 71 / 12%);
+}
+
+/* 詳細註解：.partner-more strong 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+.partner-more strong {
+  color: var(--green);
+  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  font-size: 26px;
+}
+
+/* 詳細註解：@media (max-width: 980px) 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+@media (max-width: 980px) {
+  .intro-grid,
+  .values-grid,
+  .plan-grid,
+  .partners-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .intro-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 0.58fr);
+  }
+
+  .intro-grid .section-heading {
+    grid-column: 1 / -1;
+  }
+
+  .values-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .partners-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* 詳細註解：@media (max-width: 720px) 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+@media (max-width: 720px) {
+  .about-section {
+    padding: 64px 0;
+  }
+
+  .about-container {
+    width: calc(100% - 40px);
+  }
+
+  .intro-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .intro-image-wrap {
+    order: 2;
+  }
+
+  .intro-copy {
+    order: 3;
+    border-left: 0;
+    border-top: 4px solid var(--gold);
+    padding: 22px 0 0;
+  }
+
+  .section-heading h2 {
+    font-size: 36px;
+  }
+
+  .values-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .value-card {
+    min-height: 230px;
+    padding: 20px 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  .plan-timeline {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-right: 0;
+  }
+
+  .plan-timeline-item {
+    align-items: flex-start;
+    padding-top: 30px;
+    text-align: left;
+  }
+
+  .plan-timeline-item p {
+    max-width: none;
+    margin: 0;
+    text-align: left;
+  }
+
+  .partners-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .partner-item {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .intro-dot {
+    width: 54px;
+    height: 54px;
+    right: -8px;
+    bottom: -12px;
+  }
+}
+
+/* 詳細註解：@media (max-width: 420px) 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
+@media (max-width: 420px) {
+  .values-list,
+  .partners-list {
+    grid-template-columns: 1fr;
+  }
+
+  .value-card {
+    min-height: 0;
+  }
+}

@@ -1,0 +1,55 @@
+# 中文註解：本檔定義本機或伺服器上的完整服務組合：Postgres、FastAPI 後端與前端 nginx。
+services:
+  db:
+    # 中文註解：資料庫服務，使用 volume 保留資料並提供 healthcheck 給後端等待。
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-ilink}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    # 中文註解：後端 API 服務，依賴資料庫健康後才啟動並掛載上傳檔案 volume。
+    build:
+      context: ./backend
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    # 中文註解：前端服務，建置 Vite 靜態檔後由 nginx 對外提供。
+    build:
+      context: .
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000/api/v1}
+        VITE_R2_PUBLIC_BASE_URL: ${R2_PUBLIC_BASE_URL:-https://pub-7a1b6685560e457bad83e2c14242ce38.r2.dev}
+    restart: unless-stopped
+    ports:
+      - "5174:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  backend_uploads:

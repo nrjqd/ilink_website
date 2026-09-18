@@ -1,0 +1,40 @@
+// TypeScript 專案設定，控制前端編譯目標、模組解析、嚴格型別檢查與專案參照。
+// 維護重點：修改選項前先確認 Vite、React 與 TypeScript 版本是否仍支援該設定。
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    // 以 ECMAScript 2020 為目標 JavaScript 版本
+    "useDefineForClassFields": true,
+    // 代表 TypeScript 會遵循比較現代、正式的 JavaScript class field 標準
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    // 代表瀏覽器 DOM API、可迭代的 DOM API 以及 ECMAScript 2020 的功能
+    "allowJs": false,
+    // 不把普通 .js JavaScript 檔案當成 TypeScript 專案的一部分來處理。
+    "skipLibCheck": true,
+    // 不深入檢查第三方套件的 .d.ts 型別宣告檔。
+    "esModuleInterop": true,
+    // 允許使用 CommonJS 模組的方式來匯入 ES 模組，讓 CommonJS 和 ES Module 比較容易一起工作。
+    "allowSyntheticDefaultImports": true,
+    // 放寬 default import 的限制。
+    "strict": true,
+    // 啟用嚴格型別檢查
+    "forceConsistentCasingInFileNames": true,
+    // import 檔案名稱時，大小寫必須一致。
+    "module": "ESNext",
+    // TypeScript 使用最新的 ES Module 模組格式。
+    "moduleResolution": "Node",
+    // TypeScript 使用 Node.js 的模組解析方式。
+    "resolveJsonModule": true,
+    // 允許你直接 import JSON。
+    "isolatedModules": true,
+    // 每一個 TypeScript 檔案都應該可以被「單獨轉譯」。
+    "noEmit": true,
+    // emit 在編譯器裡的意思是：輸出編譯結果。
+    // TypeScript 不要輸出 .js 檔案。
+    "jsx": "react-jsx"
+  },
+  "include": ["src"],
+  // TypeScript 主要檢查 src 資料夾。
+  "references": [{ "path": "./tsconfig.node.json" }]
+  // 這個 tsconfig.json 會參考 tsconfig.node.json，讓 TypeScript 也能檢查 Node.js 的程式碼。
+}

@@ -1,0 +1,12 @@
+// Vite 與 Node 端工具設定，提供建置設定檔本身需要的 TypeScript 編譯選項。
+// 維護重點：修改選項前先確認 Vite、React 與 TypeScript 版本是否仍支援該設定。
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["vite.config.ts"]
+}
