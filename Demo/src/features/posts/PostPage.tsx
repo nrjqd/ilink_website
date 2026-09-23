@@ -4,6 +4,7 @@ import { SiteHeader } from "../../shared/SiteHeader";
 import { resolveMediaUrl } from "../../shared/media";
 import { SafeImage } from "../../shared/SafeMedia";
 import { apiBaseUrl } from "../../shared/api";
+import { absoluteSiteUrl, updateSeo } from "../../shared/seo";
 
 interface PostPageProps {
   currentPath: string;
@@ -25,6 +26,7 @@ type PostRecord = {
   event_date?: string | null;
   cover_media?: MediaRecord | null;
   published_at?: string | null;
+  updated_at?: string | null;
 };
 
 function getSlug(path: string) {
@@ -48,6 +50,18 @@ function renderMarkdown(content: string) {
     .filter(Boolean);
 }
 
+function plainTextSummary(content: string) {
+  return content
+    .replace(/[#*_>`~\[\]()]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 160);
+}
+
+function postDescription(post: PostRecord) {
+  return post.summary?.trim() || plainTextSummary(post.content) || post.title;
+}
+
 export function PostPage({ currentPath }: PostPageProps) {
   const slug = useMemo(() => getSlug(currentPath), [currentPath]);
   const [post, setPost] = useState<PostRecord | null>(null);
@@ -65,9 +79,28 @@ export function PostPage({ currentPath }: PostPageProps) {
       })
       .then((nextPost) => {
         setPost(nextPost);
-        document.title = `${nextPost.title} | I-LINK`;
-        const description = document.querySelector<HTMLMetaElement>("meta[name='description']");
-        if (description) description.content = nextPost.summary || nextPost.title;
+        const path = `/posts/${nextPost.slug}`;
+        const description = postDescription(nextPost);
+        const image = mediaUrl(nextPost.cover_media);
+        updateSeo({
+          title: `${nextPost.title} | I-LINK`,
+          description,
+          path,
+          image: image || undefined,
+          type: "article",
+          jsonLd: {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: nextPost.title,
+            description,
+            ...(image ? { image } : {}),
+            ...(nextPost.published_at ? { datePublished: nextPost.published_at } : {}),
+            ...(nextPost.updated_at || nextPost.published_at
+              ? { dateModified: nextPost.updated_at || nextPost.published_at }
+              : {}),
+            mainEntityOfPage: absoluteSiteUrl(path),
+          },
+        });
       })
       .catch((nextError) => {
         if (nextError.name !== "AbortError") setError(nextError instanceof Error ? nextError.message : "文章載入失敗");

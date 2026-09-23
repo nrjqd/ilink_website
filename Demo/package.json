@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5174",
-    "build": "tsc -b && vite build",
+    "build": "node scripts/generate-sitemap.mjs && tsc -b && vite build",
     "check:timeline-aspect": "node scripts/check-timeline-aspect.cjs",
     "check:timeline-scroll": "node scripts/check-timeline-scroll.cjs",
     "preview": "vite preview --host 127.0.0.1 --port 4174"

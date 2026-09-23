@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://ilink-website-582.pages.dev/sitemap.xml
+Sitemap: https://usckh.com/sitemap.xml
