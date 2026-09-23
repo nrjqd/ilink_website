@@ -18,6 +18,7 @@ function loadLocalEnv(name) {
   }
 }
 
+loadLocalEnv(".env.production");
 loadLocalEnv(".env.local");
 loadLocalEnv(".env.docker");
 loadLocalEnv(".env.docker.example");

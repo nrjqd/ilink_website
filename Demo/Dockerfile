@@ -4,7 +4,7 @@ FROM node:24-bookworm-slim AS build
 WORKDIR /app
 
 # 中文註解：建置時可覆寫 API 位址，讓同一份映像可對接不同後端。
-ARG VITE_API_BASE_URL=http://localhost:8000/api/v1
+ARG VITE_API_BASE_URL=https://ilink-website.onrender.com/api/v1
 ARG VITE_SITE_URL=https://usckh.com
 ARG VITE_R2_PUBLIC_BASE_URL=https://pub-7a1b6685560e457bad83e2c14242ce38.r2.dev
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL

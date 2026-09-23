@@ -31,7 +31,10 @@ class Settings(BaseSettings):
     r2_bucket_name: str | None = None
     r2_public_base_url: str | None = None
 
-    frontend_url: str = "http://localhost:3000,http://127.0.0.1:5174"
+    frontend_url: str = (
+        "http://localhost:3000,http://127.0.0.1:5174,"
+        "https://usckh.com,https://www.usckh.com,https://ilink-website-582.pages.dev"
+    )
     trusted_hosts: str = "localhost,127.0.0.1,testserver"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
