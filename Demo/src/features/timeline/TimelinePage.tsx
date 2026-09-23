@@ -5,8 +5,8 @@
  * 不再使用本地 timeline fallback 作為內容來源。
  */
 
-import { Suspense, lazy, useEffect, useRef, useState } from "react";
-import { BookOpen, Database, MapPinned } from "lucide-react";
+import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { ArrowRight, BookOpen, Database, MapPinned } from "lucide-react";
 import { SiteHeader } from "../../shared/SiteHeader";
 import { SiteFooter } from "../../shared/SiteFooter";
 import { createTimelineChapters } from "./timeline.data";
@@ -90,6 +90,7 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   const chapterGridRef = useRef<HTMLElement>(null);
   const storyDetailRef = useRef<HTMLElement>(null);
+  const shouldScrollToStoryDetailRef = useRef(false);
   const [chapters, setChapters] = useState<TimelineChapter[]>([]);
   const [selectedChapterId, setSelectedChapterId] = useState("");
   const [shouldLoadScene, setShouldLoadScene] = useState(false);
@@ -104,6 +105,9 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
     reducedMotion || isMobileTimeline,
   );
   const selectedChapter = chapters.find((chapter) => chapter.id === selectedChapterId) ?? chapters[0];
+  const selectedArticleHref = selectedChapter
+    ? `/posts/${encodeURIComponent(selectedChapter.slug)}`
+    : "";
 
   useEffect(() => {
     const controller = new AbortController();
@@ -159,11 +163,27 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
     });
   }, [shouldLoadHeroVideo]);
 
+  function scrollToStoryDetail() {
+    storyDetailRef.current?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+  }
+
+  useLayoutEffect(() => {
+    if (!shouldScrollToStoryDetailRef.current) return;
+
+    shouldScrollToStoryDetailRef.current = false;
+    const frame = window.requestAnimationFrame(scrollToStoryDetail);
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [selectedChapterId, reducedMotion]);
+
   function selectChapter(chapterId: string) {
+    if (chapterId === selectedChapterId) {
+      window.requestAnimationFrame(scrollToStoryDetail);
+      return;
+    }
+
+    shouldScrollToStoryDetailRef.current = true;
     setSelectedChapterId(chapterId);
-    window.setTimeout(() => {
-      storyDetailRef.current?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
-    }, 0);
   }
 
   function skipTimeline() {
@@ -259,7 +279,13 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
 
           <section className="story-detail" id="chapter-story" ref={storyDetailRef} aria-live="polite">
             <div className="story-detail__media">
-              <SafeImage src={selectedChapter.detailImage} alt={selectedChapter.detailAlt} />
+              <a
+                className="story-detail__image-link"
+                href={selectedArticleHref}
+                aria-label={`閱讀完整文章：${selectedChapter.title}`}
+              >
+                <SafeImage src={selectedChapter.detailImage} alt={selectedChapter.detailAlt} />
+              </a>
               <div className="story-detail__palette" aria-label="視覺色票">
                 {selectedChapter.palette.map((color) => (
                   <span key={color} style={{ background: color }} />
@@ -270,12 +296,18 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
               <p className="eyebrow">{selectedChapter.eyebrow}</p>
               <div className="story-detail__title-row">
                 <span>{String(selectedChapter.index).padStart(2, "0")}</span>
-                <h2>{selectedChapter.title}</h2>
+                <h2>
+                  <a href={selectedArticleHref}>{selectedChapter.title}</a>
+                </h2>
               </div>
               <strong>{selectedChapter.lead}</strong>
               {selectedChapter.story.map((paragraph, paragraphIndex) => (
                 <p key={`${selectedChapter.id}-story-${paragraphIndex}`}>{paragraph}</p>
               ))}
+              <a className="story-detail__article-link" href={selectedArticleHref}>
+                <span>閱讀完整文章</span>
+                <ArrowRight size={18} strokeWidth={1.8} aria-hidden="true" />
+              </a>
               <StoryGuide />
             </article>
           </section>

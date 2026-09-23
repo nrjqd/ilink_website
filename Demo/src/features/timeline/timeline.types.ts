@@ -22,6 +22,8 @@ export interface TimelinePanel {
 // 詳細註解：TimelineChapter 定義此模組使用的資料形狀，調整欄位時需要同步檢查 API 與元件引用。
 export interface TimelineChapter {
   id: string;
+  postId: number;
+  slug: string;
   index: number;
   year: string;
   eyebrow: string;

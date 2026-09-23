@@ -721,6 +721,13 @@ canvas {
   top: 112px;
 }
 
+.story-detail__image-link {
+  display: block;
+  overflow: hidden;
+  border-radius: 0 86px 0 0;
+  color: inherit;
+}
+
 /* 詳細註解：.story-detail__media img 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
 .story-detail__media img {
   width: 100%;
@@ -728,6 +735,19 @@ canvas {
   border-radius: 0 86px 0 0;
   object-fit: cover;
   box-shadow: 0 30px 90px rgb(53 68 76 / 16%);
+  transition: transform 220ms ease;
+}
+
+.story-detail__image-link:hover img,
+.story-detail__image-link:focus-visible img {
+  transform: scale(1.01);
+}
+
+.story-detail__image-link:focus-visible,
+.story-detail__title-row h2 a:focus-visible,
+.story-detail__article-link:focus-visible {
+  outline: 3px solid rgb(208 185 71 / 34%);
+  outline-offset: 5px;
 }
 
 /* 詳細註解：.story-detail__palette 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
@@ -776,6 +796,24 @@ canvas {
   line-height: 1.12;
 }
 
+.story-detail__title-row h2 a {
+  display: inline;
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 3px;
+  color: inherit;
+  transition:
+    background-size 180ms ease,
+    color 180ms ease;
+}
+
+.story-detail__title-row h2 a:hover,
+.story-detail__title-row h2 a:focus-visible {
+  background-size: 100% 3px;
+  color: var(--green);
+}
+
 /* 詳細註解：.story-detail__copy strong 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
 .story-detail__copy strong {
   display: block;
@@ -795,6 +833,38 @@ canvas {
   color: var(--muted);
   font-size: 17px;
   line-height: 1.95;
+}
+
+.story-detail__article-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 10px;
+  margin-top: 10px;
+  color: var(--green);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.story-detail__article-link svg {
+  color: var(--gold);
+  transition: transform 180ms ease;
+}
+
+.story-detail__article-link:hover,
+.story-detail__article-link:focus-visible {
+  color: var(--gold);
+  transform: translateX(3px);
+}
+
+.story-detail__article-link:hover svg,
+.story-detail__article-link:focus-visible svg {
+  transform: translateX(3px);
 }
 
 /* 詳細註解：.story-detail__copy dl 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
@@ -2776,6 +2846,10 @@ canvas {
 
   .story-detail__media img {
     aspect-ratio: 16 / 11;
+    border-radius: var(--timeline-panel-radius);
+  }
+
+  .story-detail__image-link {
     border-radius: var(--timeline-panel-radius);
   }
 

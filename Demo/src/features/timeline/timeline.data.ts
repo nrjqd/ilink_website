@@ -6,7 +6,8 @@ import type {
 import { resolveMediaUrl } from "../../shared/media";
 
 export type TimelineEvent = {
-  id?: number | string;
+  id: number;
+  slug: string;
   dateCode: string;
   dateLabel: string;
   title: string;
@@ -93,6 +94,8 @@ export function createTimelineChapters(
 
     return {
       id: `event-${event.id ?? event.dateCode}`,
+      postId: event.id,
+      slug: event.slug,
       index: eventIndex + 1,
       year: event.dateLabel,
       eyebrow: theme,

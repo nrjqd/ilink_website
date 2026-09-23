@@ -63,6 +63,7 @@ function postImages(post: TimelinePostDto) {
 function postToTimelineEvent(post: TimelinePostDto): TimelineEvent {
   return {
     id: post.id,
+    slug: post.slug,
     dateCode: dateCode(post.event_date, post.id),
     dateLabel: dateLabel(post.event_date),
     title: post.title,
