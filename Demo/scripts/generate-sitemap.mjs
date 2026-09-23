@@ -22,7 +22,11 @@ loadLocalEnv(".env.local");
 loadLocalEnv(".env.docker");
 loadLocalEnv(".env.docker.example");
 
-const siteUrl = (process.env.VITE_SITE_URL || DEFAULT_SITE_URL).trim().replace(/\/+$/, "");
+const configuredSiteUrl = (process.env.VITE_SITE_URL || DEFAULT_SITE_URL).trim().replace(/\/+$/, "");
+const siteUrl = configuredSiteUrl === DEFAULT_SITE_URL ? configuredSiteUrl : DEFAULT_SITE_URL;
+if (configuredSiteUrl !== DEFAULT_SITE_URL) {
+  console.warn(`Ignoring VITE_SITE_URL=${configuredSiteUrl}; sitemap uses ${DEFAULT_SITE_URL}.`);
+}
 const apiBaseUrl = (process.env.SITEMAP_POSTS_API_URL || process.env.VITE_API_BASE_URL || "").trim().replace(/\/+$/, "");
 
 function absoluteUrl(path) {
@@ -106,4 +110,3 @@ const urls = [...staticUrls, ...postUrls].filter((entry) => {
 });
 
 writeFileSync(resolve(process.cwd(), "public", "sitemap.xml"), buildXml(urls), "utf8");
-

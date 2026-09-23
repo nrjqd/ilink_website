@@ -6,7 +6,7 @@
  */
 
 import { Suspense, lazy, useEffect, useState } from "react";
-import { updateSeo } from "./shared/seo";
+import { updateSeo, type SeoMetadata } from "./shared/seo";
 
 const AdminTimelinePage = lazy(() =>
   import("./features/admin/AdminTimelinePage").then((module) => ({ default: module.AdminTimelinePage })),
@@ -21,7 +21,7 @@ const TimelinePage = lazy(() =>
 );
 const PostPage = lazy(() => import("./features/posts/PostPage").then((module) => ({ default: module.PostPage })));
 
-const pageMetadata: Record<string, { title: string; description: string; path: string; robots?: string }> = {
+const pageMetadata: Record<string, SeoMetadata> = {
   "/": {
     title: "I-LINK｜旗美內門地方故事與成果平台",
     description: "看見旗山、美濃、內門的地方故事、學生作品、活動現場與年度成果。",
@@ -64,10 +64,11 @@ function getCurrentPath() {
   return window.location.pathname === "" ? "/" : window.location.pathname;
 }
 
-function getMetadata(path: string) {
+function getMetadata(path: string): SeoMetadata {
   if (path.startsWith("/places/")) return pageMetadata["/places"];
   if (path.startsWith("/works/")) return pageMetadata["/works"];
-  if (path.startsWith("/posts/")) return pageMetadata["/works"];
+  if (path.startsWith("/admin/")) return { ...pageMetadata["/admin"], path };
+  if (path.startsWith("/posts/")) return { ...pageMetadata["/works"], path, type: "article" };
   return pageMetadata[path] ?? pageMetadata["/"];
 }
 
@@ -120,7 +121,7 @@ export function App() {
         <ImpactPage currentPath={path} />
       ) : path === "/about" ? (
         <AboutPage currentPath={path} />
-      ) : path === "/admin" ? (
+      ) : path === "/admin" || path.startsWith("/admin/") ? (
         <AdminTimelinePage currentPath={path} />
       ) : path.startsWith("/posts/") ? (
         <PostPage currentPath={path} />
