@@ -577,12 +577,36 @@ canvas {
   bottom: 38px;
   z-index: 8;
   margin: 0;
+  border: 1px solid rgb(53 68 76 / 18%);
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: rgb(251 250 245 / 72%);
   color: rgb(53 68 76 / 54%);
+  cursor: pointer;
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.18em;
+  pointer-events: auto;
   text-transform: uppercase;
   transform: translateX(-50%);
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.scroll-hint:hover,
+.scroll-hint:focus-visible {
+  border-color: rgb(208 185 71 / 72%);
+  background: rgb(251 250 245 / 92%);
+  color: var(--green);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.scroll-hint:focus-visible {
+  outline: 3px solid rgb(208 185 71 / 34%);
+  outline-offset: 4px;
 }
 
 /* 詳細註解：.chapter-grid 區塊定義相關元素的版面、視覺狀態或響應式規則。 */

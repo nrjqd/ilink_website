@@ -88,6 +88,7 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
   const containerRef = useRef<HTMLElement>(null);
   const timelineCanvasRef = useRef<HTMLDivElement>(null);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const chapterGridRef = useRef<HTMLElement>(null);
   const storyDetailRef = useRef<HTMLElement>(null);
   const [chapters, setChapters] = useState<TimelineChapter[]>([]);
   const [selectedChapterId, setSelectedChapterId] = useState("");
@@ -165,6 +166,19 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
     }, 0);
   }
 
+  function skipTimeline() {
+    const target = chapterGridRef.current;
+    if (!target) return;
+
+    const headerHeight = document.querySelector<HTMLElement>(".demo-header")?.offsetHeight ?? 0;
+    const targetTop = target.getBoundingClientRect().top + window.scrollY - headerHeight;
+
+    window.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }
+
   return (
     <main className="app-shell">
       <SiteHeader currentPath={currentPath} />
@@ -217,11 +231,13 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
               </div>
               <TimelineOverlay activeIndex={activeIndex} chapters={chapters} showMobileMedia={isMobileTimeline} />
               <TimelineProgress progress={progress} activeIndex={activeIndex} chapters={chapters} />
-              <p className="scroll-hint">向下探索</p>
+              <button type="button" className="scroll-hint" onClick={skipTimeline}>
+                向下探索
+              </button>
             </div>
           </section>
 
-          <section className="chapter-grid" id="chapters" aria-label="I-LINK 時間軸節點">
+          <section className="chapter-grid" id="chapters" ref={chapterGridRef} aria-label="I-LINK 時間軸節點">
             {chapters.map((chapter) => (
               <button
                 className={`timeline-card ${chapter.id === selectedChapter.id ? "is-selected" : ""}`}
