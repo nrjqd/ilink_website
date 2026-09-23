@@ -1,17 +1,82 @@
-/**
- * 時間軸互動使用的 React hook，封裝媒體查詢、捲動或動畫相關的副作用。
- *
- * 維護重點：註解聚焦在模組責任、資料來源與副作用，讓元件和 API 呼叫的邊界保持清楚。
- */
-
-// 中文註解：平滑捲動 Hook，集中處理捲動監聽與進度計算。
-
 import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// 詳細註解：useSmoothScroll 是自訂 Hook，集中管理副作用或可重用狀態，避免各元件重複處理。
+let activeLenis: Lenis | null = null;
+
+function runOnce(callback: (() => void) | undefined) {
+  let called = false;
+
+  return () => {
+    if (called) return;
+    called = true;
+    callback?.();
+  };
+}
+
+function waitForScrollPosition(top: number, callback: (() => void) | undefined) {
+  const complete = runOnce(callback);
+
+  if ("onscrollend" in window) {
+    window.addEventListener("scrollend", complete, { once: true });
+  }
+
+  let frameCount = 0;
+  let stableFrames = 0;
+
+  const check = () => {
+    frameCount += 1;
+
+    if (Math.abs(window.scrollY - top) <= 2) {
+      stableFrames += 1;
+    } else {
+      stableFrames = 0;
+    }
+
+    if (stableFrames >= 2 || frameCount >= 120) {
+      complete();
+      return;
+    }
+
+    window.requestAnimationFrame(check);
+  };
+
+  window.requestAnimationFrame(check);
+}
+
+export function scrollToPageY(
+  top: number,
+  options: { immediate?: boolean; onComplete?: () => void } = {},
+) {
+  const { immediate = false, onComplete } = options;
+  const complete = runOnce(onComplete);
+
+  if (activeLenis) {
+    activeLenis.resize();
+    ScrollTrigger.refresh();
+    activeLenis.scrollTo(top, {
+      immediate,
+      lock: true,
+      force: true,
+      onComplete: complete,
+    });
+    return;
+  }
+
+  window.scrollTo({
+    top,
+    behavior: immediate ? "auto" : "smooth",
+  });
+
+  if (immediate) {
+    window.requestAnimationFrame(complete);
+    return;
+  }
+
+  waitForScrollPosition(top, complete);
+}
+
 export function useSmoothScroll(disabled: boolean) {
   useEffect(() => {
     if (disabled) return;
@@ -21,8 +86,8 @@ export function useSmoothScroll(disabled: boolean) {
       wheelMultiplier: 0.9,
       touchMultiplier: 1.1,
     });
+    activeLenis = lenis;
 
-    // 詳細註解：scrollToHash 封裝此檔案中的一段資料轉換或互動流程，方便多處重用。
     const scrollToHash = (hash: string, immediate = false) => {
       if (!hash) return;
       const target = document.querySelector(hash);
@@ -31,7 +96,6 @@ export function useSmoothScroll(disabled: boolean) {
       }
     };
 
-    // 詳細註解：onAnchorClick 封裝此檔案中的一段資料轉換或互動流程，方便多處重用。
     const onAnchorClick = (event: MouseEvent) => {
       const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
       if (!link) return;
@@ -42,7 +106,6 @@ export function useSmoothScroll(disabled: boolean) {
       scrollToHash(hash);
     };
 
-    // 詳細註解：update 封裝此檔案中的一段資料轉換或互動流程，方便多處重用。
     const update = (time: number) => {
       lenis.raf(time * 1000);
     };
@@ -50,7 +113,7 @@ export function useSmoothScroll(disabled: boolean) {
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
-    // 詳細註解：alignInitialHash 封裝此檔案中的一段資料轉換或互動流程，方便多處重用。
+
     const alignInitialHash = () => {
       scrollToHash(window.location.hash, true);
     };
@@ -67,6 +130,9 @@ export function useSmoothScroll(disabled: boolean) {
       document.removeEventListener("click", onAnchorClick);
       window.removeEventListener("load", alignInitialHash);
       gsap.ticker.remove(update);
+      if (activeLenis === lenis) {
+        activeLenis = null;
+      }
       lenis.destroy();
     };
   }, [disabled]);

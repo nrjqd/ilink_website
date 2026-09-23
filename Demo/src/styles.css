@@ -397,6 +397,7 @@ canvas {
 .timeline-canvas {
   position: absolute;
   inset: 0;
+  pointer-events: none;
 }
 
 /* 詳細註解：.canvas-fallback 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
@@ -574,38 +575,77 @@ canvas {
 .scroll-hint {
   position: absolute;
   left: 50%;
-  bottom: 38px;
-  z-index: 8;
+  bottom: max(32px, env(safe-area-inset-bottom));
+  z-index: 12;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
   margin: 0;
-  border: 1px solid rgb(53 68 76 / 18%);
+  border: 1px solid rgb(53 68 76 / 22%);
   border-radius: 999px;
-  padding: 10px 16px;
-  background: rgb(251 250 245 / 72%);
-  color: rgb(53 68 76 / 54%);
+  padding: 8px 18px 8px 12px;
+  background: #d0b947;
+  box-shadow: 0 14px 36px rgb(53 68 76 / 22%);
+  color: #35444c;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0.18em;
   pointer-events: auto;
-  text-transform: uppercase;
   transform: translateX(-50%);
   transition:
     background 180ms ease,
     border-color 180ms ease,
+    box-shadow 180ms ease,
     color 180ms ease,
     transform 180ms ease;
 }
 
-.scroll-hint:hover,
-.scroll-hint:focus-visible {
-  border-color: rgb(208 185 71 / 72%);
-  background: rgb(251 250 245 / 92%);
+.scroll-hint__icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 999px;
+  background: rgb(53 68 76 / 12%);
+}
+
+.scroll-hint__copy {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  text-align: left;
+}
+
+.scroll-hint__copy strong {
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.scroll-hint__copy small {
+  color: rgb(53 68 76 / 72%);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.scroll-hint:hover {
+  border-color: rgb(53 68 76 / 32%);
+  background: #dbc85f;
+  box-shadow: 0 18px 44px rgb(53 68 76 / 28%);
   color: var(--green);
   transform: translateX(-50%) translateY(-2px);
 }
 
+.scroll-hint:active {
+  box-shadow: 0 10px 24px rgb(53 68 76 / 22%);
+  transform: translateX(-50%) scale(0.98);
+}
+
 .scroll-hint:focus-visible {
-  outline: 3px solid rgb(208 185 71 / 34%);
+  outline: 3px solid rgb(53 68 76 / 42%);
   outline-offset: 4px;
 }
 
@@ -2806,9 +2846,15 @@ canvas {
     margin-right: 20px;
   }
 
-  .timeline-progress,
-  .scroll-hint {
+  .timeline-progress {
     display: none;
+  }
+
+  .scroll-hint {
+    bottom: max(18px, calc(env(safe-area-inset-bottom) + 16px));
+    gap: 10px;
+    min-height: 50px;
+    padding: 8px 16px 8px 10px;
   }
 
   .chapter-grid {
@@ -2932,6 +2978,26 @@ canvas {
 
   body {
     background-size: 84px 84px;
+  }
+
+  .scroll-hint {
+    bottom: max(16px, calc(env(safe-area-inset-bottom) + 14px));
+    max-width: calc(100vw - 32px);
+    min-height: 48px;
+    padding: 7px 14px 7px 9px;
+  }
+
+  .scroll-hint__icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .scroll-hint__copy strong {
+    font-size: 15px;
+  }
+
+  .scroll-hint__copy small {
+    font-size: 11px;
   }
 
   .demo-header {
@@ -3168,6 +3234,14 @@ canvas {
 
   .site-footer__links {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .scroll-hint {
+    bottom: max(12px, calc(env(safe-area-inset-bottom) + 10px));
+    min-height: 48px;
+    padding-block: 7px;
   }
 }
 

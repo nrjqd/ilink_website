@@ -6,7 +6,7 @@
  */
 
 import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { ArrowRight, BookOpen, Database, MapPinned } from "lucide-react";
+import { ArrowDown, ArrowRight, BookOpen, Database, MapPinned } from "lucide-react";
 import { SiteHeader } from "../../shared/SiteHeader";
 import { SiteFooter } from "../../shared/SiteFooter";
 import { createTimelineChapters } from "./timeline.data";
@@ -16,7 +16,7 @@ import { TimelineOverlay } from "./TimelineOverlay";
 import { TimelineProgress } from "./TimelineProgress";
 import { useMediaQuery } from "./hooks/useMediaQuery";
 import { useReducedMotion } from "./hooks/useReducedMotion";
-import { useSmoothScroll } from "./hooks/useSmoothScroll";
+import { scrollToPageY, useSmoothScroll } from "./hooks/useSmoothScroll";
 import { useTimelineAnimation } from "./hooks/useTimelineAnimation";
 import { SafeImage } from "../../shared/SafeMedia";
 
@@ -193,9 +193,11 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
     const headerHeight = document.querySelector<HTMLElement>(".demo-header")?.offsetHeight ?? 0;
     const targetTop = target.getBoundingClientRect().top + window.scrollY - headerHeight;
 
-    window.scrollTo({
-      top: Math.max(0, targetTop),
-      behavior: reducedMotion ? "auto" : "smooth",
+    scrollToPageY(Math.max(0, targetTop), {
+      immediate: reducedMotion,
+      onComplete: () => {
+        target.focus({ preventScroll: true });
+      },
     });
   }
 
@@ -251,13 +253,24 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
               </div>
               <TimelineOverlay activeIndex={activeIndex} chapters={chapters} showMobileMedia={isMobileTimeline} />
               <TimelineProgress progress={progress} activeIndex={activeIndex} chapters={chapters} />
-              <button type="button" className="scroll-hint" onClick={skipTimeline}>
-                向下探索
+              <button
+                type="button"
+                className="scroll-hint"
+                onClick={skipTimeline}
+                aria-label="跳過時間軸，前往故事列表"
+              >
+                <span className="scroll-hint__icon" aria-hidden="true">
+                  <ArrowDown size={18} strokeWidth={2.2} />
+                </span>
+                <span className="scroll-hint__copy">
+                  <strong>向下探索</strong>
+                  <small>跳過時間軸</small>
+                </span>
               </button>
             </div>
           </section>
 
-          <section className="chapter-grid" id="chapters" ref={chapterGridRef} aria-label="I-LINK 時間軸節點">
+          <section className="chapter-grid" id="chapters" ref={chapterGridRef} tabIndex={-1} aria-label="I-LINK 時間軸節點">
             {chapters.map((chapter) => (
               <button
                 className={`timeline-card ${chapter.id === selectedChapter.id ? "is-selected" : ""}`}
