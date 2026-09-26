@@ -451,12 +451,31 @@
 
 /* 詳細註解：@media (max-width: 420px) 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
 @media (max-width: 420px) {
-  .values-list,
-  .partners-list {
+  .values-list {
     grid-template-columns: 1fr;
   }
 
   .value-card {
     min-height: 0;
+  }
+}
+
+/* Responsive refactor：合作單位 Mobile 2 欄、Tablet 3 欄（Desktop 維持 5 欄）。 */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .partners-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 639px) {
+  .partner-item,
+  .partner-more {
+    min-height: 0;
+    padding: 18px 10px;
+  }
+
+  .partner-item img {
+    width: 64px;
+    height: 64px;
   }
 }

@@ -10,6 +10,7 @@ export type TimelineEvent = {
   slug: string;
   dateCode: string;
   dateLabel: string;
+  eventDate?: string;
   title: string;
   description?: string;
   content?: string;
@@ -98,6 +99,7 @@ export function createTimelineChapters(
       slug: event.slug,
       index: eventIndex + 1,
       year: event.dateLabel,
+      date: event.eventDate ?? "",
       eyebrow: theme,
       title: event.title,
       description,

@@ -52,15 +52,37 @@ export const defaultSiteSettings: SiteSettings = {
   ],
 };
 
-export async function fetchSiteSettings(signal?: AbortSignal): Promise<SiteSettings> {
-  const response = await fetch(`${apiBaseUrl}/site-settings`, { cache: "no-store", signal });
-  if (!response.ok) return defaultSiteSettings;
-  const settings = (await response.json()) as SiteSettings;
-  return {
-    ...defaultSiteSettings,
-    ...settings,
-    logo_url: resolveMediaUrl(settings.logo_url || defaultSiteSettings.logo_url),
-    og_image_url: resolveMediaUrl(settings.og_image_url || defaultSiteSettings.og_image_url),
-    navigation: settings.navigation?.length ? settings.navigation : defaultSiteSettings.navigation,
-  };
+// Header 與 Footer 都需要站台設定：同一個頁面生命週期只請求一次，失敗（例如正式站目前 404）
+// 時安靜地使用 fallback，不丟出例外；DEV 才提示。
+let settingsRequest: Promise<SiteSettings> | null = null;
+
+async function requestSiteSettings(): Promise<SiteSettings> {
+  try {
+    const response = await fetch(`${apiBaseUrl}/site-settings`, { cache: "no-store" });
+    if (!response.ok) {
+      if (import.meta.env.DEV) console.warn(`[site-settings] API ${response.status}, using fallback settings.`);
+      return defaultSiteSettings;
+    }
+    const settings = (await response.json()) as SiteSettings;
+    return {
+      ...defaultSiteSettings,
+      ...settings,
+      logo_url: resolveMediaUrl(settings.logo_url || defaultSiteSettings.logo_url),
+      og_image_url: resolveMediaUrl(settings.og_image_url || defaultSiteSettings.og_image_url),
+      navigation: settings.navigation?.length ? settings.navigation : defaultSiteSettings.navigation,
+    };
+  } catch (error) {
+    if (import.meta.env.DEV) console.warn("[site-settings] request failed, using fallback settings.", error);
+    return defaultSiteSettings;
+  }
+}
+
+export function fetchSiteSettings(signal?: AbortSignal): Promise<SiteSettings> {
+  settingsRequest ??= requestSiteSettings();
+  if (!signal) return settingsRequest;
+  return new Promise((resolve, reject) => {
+    if (signal.aborted) return reject(new DOMException("Aborted", "AbortError"));
+    signal.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")), { once: true });
+    settingsRequest!.then(resolve);
+  });
 }

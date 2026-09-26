@@ -309,7 +309,7 @@ export function useTimelineAnimation(
       };
     },
     {
-      scope: containerRef,
+      scope: containerRef.current ? containerRef : undefined,
       dependencies: [chapterCount, disabled],
     },
   );

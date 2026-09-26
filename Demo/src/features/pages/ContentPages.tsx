@@ -151,6 +151,29 @@ function postsToEvents(items: PostListItem[]): EventListItem[] {
   });
 }
 
+type EventMonthGroup = { month: string; items: EventListItem[] };
+type EventYearGroup = { year: string; months: EventMonthGroup[] };
+
+// 依 event_date（YYYY.MM.DD）在前端分組：年 → 月；維持 API 回傳的順序，不改後端。
+function groupEventsByDate(items: EventListItem[]): EventYearGroup[] {
+  const years: EventYearGroup[] = [];
+  for (const item of items) {
+    const [year = "", month = ""] = item.date.split(".");
+    let yearGroup = years.find((group) => group.year === year);
+    if (!yearGroup) {
+      yearGroup = { year, months: [] };
+      years.push(yearGroup);
+    }
+    let monthGroup = yearGroup.months.find((group) => group.month === month);
+    if (!monthGroup) {
+      monthGroup = { month, items: [] };
+      yearGroup.months.push(monthGroup);
+    }
+    monthGroup.items.push(item);
+  }
+  return years;
+}
+
 // 詳細註解：useEventList 是自訂 Hook，集中管理副作用或可重用狀態，避免各元件重複處理。
 function useEventList() {
   const [state, setState] = useState<EventListState>({
@@ -293,7 +316,6 @@ function PageMediaHero({ titleId, eyebrow, title, description, image, imageAlt =
         className="events-page-hero__image"
         src={image}
         alt={imageAlt}
-        disableAutoCrossOrigin
         aria-hidden={imageAlt ? undefined : "true"}
       />
 
@@ -362,56 +384,72 @@ export function EventsPage({ currentPath }: PageProps) {
                 <p>新的活動發布後，會顯示在這裡。</p>
               </div>
             ) : (
-              eventItems.map((event) => (
-                <article className="timeline-item" key={event.id}>
-                  <div className="timeline-date">
-                    <time dateTime={event.date.replace(/\./g, "-")}>
-                      <span className="timeline-date__year">
-                        {event.date.slice(0, 4)}
-                      </span>
-                      <span className="timeline-date__day">
-                        {event.date.slice(5)}
-                      </span>
-                    </time>
-                    {event.place ? <p className="timeline-date__place">{event.place}</p> : null}
-                  </div>
-
-                  <div className="timeline-axis" aria-hidden="true">
-                    <span className="timeline-axis__dot" />
-                    <span className="timeline-axis__line" />
-                  </div>
-
-                  <div className="event-card">
-                    <div className="event-card__media">
-                      <SafeImage
-                        src={event.image}
-                        alt={event.title}
-                        fallbackLabel={event.image ? undefined : "尚未設定圖片"}
-                        disableAutoCrossOrigin
-                        loading="lazy"
-                      />
-                    </div>
-
-                    <div className="event-card__content">
-                      <div className="event-card__copy">
-                        {event.type ? <p className="event-card__type">{event.type}</p> : null}
-                        <h2 className="event-card__title">{event.title}</h2>
-                        {event.description ? <p className="event-card__description">{event.description}</p> : null}
-                      </div>
-
-                      <a className="event-card__button" href={`/posts/${encodeURIComponent(event.id)}`}>
-                        <span>查看活動</span>
-                        <span aria-hidden="true">→</span>
-                      </a>
-                    </div>
-                  </div>
-                </article>
-              ))
+              <EventGroups items={eventItems} />
             )}
           </div>
         </div>
       </section>
     </PageFrame>
+  );
+}
+
+// 整張卡是一個連結（不再另外放「查看活動」按鈕）；海報以 contain 呈現。
+function EventGroups({ items }: { items: EventListItem[] }) {
+  const years = groupEventsByDate(items);
+
+  return (
+    <>
+      {years.length > 1 ? (
+        <nav className="events-year-nav" aria-label="依年份跳轉">
+          {years.map((group) => (
+            <a key={group.year} className="filter-chip" href={`#events-${group.year}`}>
+              {group.year}
+            </a>
+          ))}
+        </nav>
+      ) : null}
+      {years.map((yearGroup) => (
+        <section key={yearGroup.year} className="events-year" id={`events-${yearGroup.year}`} aria-labelledby={`events-year-${yearGroup.year}`}>
+          <h3 className="events-year__title" id={`events-year-${yearGroup.year}`}>
+            {yearGroup.year}
+          </h3>
+          {yearGroup.months.map((monthGroup) => (
+            <section key={monthGroup.month} className="events-month">
+              <h4 className="events-month__title">{Number(monthGroup.month)} 月</h4>
+              <ol className="events-month__list">
+                {monthGroup.items.map((event) => (
+                  <li key={event.id}>
+                    <a className="event-tile" href={`/posts/${encodeURIComponent(event.id)}`}>
+                      <SafeImage
+                        ratio="poster"
+                        frameClassName="event-tile__media"
+                        src={event.image}
+                        alt=""
+                        fallbackLabel="尚未設定圖片"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <span className="event-tile__body">
+                        <span className="event-tile__meta">
+                          <time dateTime={event.date.replace(/\./g, "-")}>{event.date.slice(5)}</time>
+                          {event.place ? <span>{event.place}</span> : null}
+                          {event.type ? <span>{event.type}</span> : null}
+                        </span>
+                        <strong className="event-tile__title">{event.title}</strong>
+                        {event.description ? <span className="event-tile__desc">{event.description}</span> : null}
+                        <span className="event-tile__cta" aria-hidden="true">
+                          查看活動 →
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ))}
+        </section>
+      ))}
+    </>
   );
 }
 

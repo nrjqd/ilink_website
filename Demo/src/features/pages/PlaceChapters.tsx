@@ -297,21 +297,25 @@ export function PlaceChapters() {
           onEnter: () => {
             const timeline = gsap.timeline();
 
-            timeline
-              .fromTo(number, { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" })
-              .fromTo(
+            // 推薦文章是非同步載入，觸發時可能還沒有 .place-spot；只對存在的目標建立動畫，避免 GSAP 警告。
+            if (number) timeline.fromTo(number, { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" });
+            if (feature) {
+              timeline.fromTo(
                 feature,
                 { clipPath: "inset(0 100% 0 0)" },
                 { clipPath: "inset(0 0% 0 0)", duration: 0.62, ease: "power3.out" },
                 "-=0.06",
-              )
-              .fromTo(copy, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.42, ease: "power2.out" }, "-=0.18")
-              .fromTo(
+              );
+            }
+            if (copy) timeline.fromTo(copy, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.42, ease: "power2.out" }, "-=0.18");
+            if (spots.length) {
+              timeline.fromTo(
                 spots,
                 { autoAlpha: 0, x: 26 },
                 { autoAlpha: 1, x: 0, duration: 0.36, stagger: 0.1, ease: "power2.out" },
                 "-=0.14",
               );
+            }
           },
         });
       });

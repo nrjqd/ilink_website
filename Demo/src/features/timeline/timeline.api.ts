@@ -1,6 +1,7 @@
 import type { TimelineEvent } from "./timeline.data";
-import { getPostDisplayImage, getPostDisplayMedia } from "../../shared/media";
+import { getPostDisplayImage } from "../../shared/media";
 import { apiBaseUrl } from "../../shared/api";
+import { formatPostCategory, formatPostRegion } from "../../shared/contentLabels";
 
 type MediaDto = {
   original_filename?: string | null;
@@ -46,14 +47,14 @@ function dateCode(value: string | null | undefined, fallbackId: number) {
 
 function postImages(post: TimelinePostDto) {
   const images: TimelineEvent["images"] = [];
-  const media = getPostDisplayMedia(post) as MediaDto | null;
   const imageUrl = getPostDisplayImage(post);
 
+  // 圖說與 alt 使用文章標題；original_filename 是上傳檔名（例如 0327xxx.webp），不應出現在畫面上。
   if (imageUrl) {
     images.push({
       src: imageUrl,
-      label: media?.original_filename || post.title,
-      alt: media?.original_filename || post.title,
+      label: post.title,
+      alt: post.title,
     });
   }
 
@@ -69,8 +70,10 @@ function postToTimelineEvent(post: TimelinePostDto): TimelineEvent {
     title: post.title,
     description: post.summary ?? undefined,
     content: post.content ?? undefined,
-    location: post.region ?? post.category ?? "",
-    theme: post.category ?? "",
+    eventDate: post.event_date ?? "",
+    // 地區/分類轉成中文 label，避免畫面顯示 QISHAN、LOCAL_RESEARCH 等原始 enum。
+    location: post.region ? formatPostRegion(post.region) : post.category ? formatPostCategory(post.category) : "",
+    theme: post.category ? formatPostCategory(post.category) : "",
     images: postImages(post),
   };
 }

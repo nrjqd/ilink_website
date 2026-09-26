@@ -26,6 +26,8 @@ export interface TimelineChapter {
   slug: string;
   index: number;
   year: string;
+  /** CMS event_date（YYYY-MM-DD），供 mobile/tablet 列表排序與分組；可能為空字串。 */
+  date: string;
   eyebrow: string;
   title: string;
   description: string;

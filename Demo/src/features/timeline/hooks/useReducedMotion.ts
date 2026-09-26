@@ -6,20 +6,10 @@
 
 // 中文註解：偏好減少動態效果 Hook，用於尊重使用者的系統動效設定。
 
-import { useEffect, useState } from "react";
+import { useMediaQuery } from "./useMediaQuery";
+import { REDUCED_MOTION_QUERY } from "../../../shared/breakpoints";
 
-// 詳細註解：useReducedMotion 是自訂 Hook，集中管理副作用或可重用狀態，避免各元件重複處理。
+// 詳細註解：初始值同步讀取 matchMedia，避免第一次 render 先以「有動畫」狀態載入 WebGL 再切換。
 export function useReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // 詳細註解：update 封裝此檔案中的一段資料轉換或互動流程，方便多處重用。
-    const update = () => setReduced(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-
-  return reduced;
+  return useMediaQuery(REDUCED_MOTION_QUERY);
 }

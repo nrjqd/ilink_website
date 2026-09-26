@@ -5,6 +5,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SiteHeader } from "../../shared/SiteHeader";
 import { SiteFooter } from "../../shared/SiteFooter";
 import { SafeImage } from "../../shared/SafeMedia";
+import { BottomSheet } from "../../shared/BottomSheet";
+import { useMediaQuery } from "../timeline/hooks/useMediaQuery";
 import { getPostDisplayImage } from "../../shared/media";
 import { fetchPaginatedPosts, type PaginatedPosts, type PostListItem } from "../../shared/posts";
 import {
@@ -20,7 +22,6 @@ import {
 
 gsap.registerPlugin(Flip);
 
-type WorkLayout = "feature" | "portrait" | "landscape" | "standard";
 type RegionFilter = "all" | PostRegion;
 type CategoryFilter = "all" | PostCategory;
 
@@ -28,8 +29,8 @@ type WorksArchivePageProps = {
   currentPath: string;
 };
 
-const worksPerPage = 4;
-const layoutSequence: WorkLayout[] = ["feature", "portrait", "landscape", "standard"];
+// 6 = Desktop 3 欄 × 2 列、Tablet 2 欄 × 3 列；URL 參數（page/region/category）語意不變。
+const worksPerPage = 6;
 
 const emptyPage: PaginatedPosts = {
   items: [],
@@ -77,6 +78,9 @@ export function WorksArchivePage({ currentPath }: WorksArchivePageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const gridRef = useRef<HTMLElement>(null);
+  const isMobile = useMediaQuery("(max-width: 639px)");
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
+  const activeFilterCount = (activeRegion === "all" ? 0 : 1) + (activeCategory === "all" ? 0 : 1);
   const flipStateRef = useRef<ReturnType<typeof Flip.getState> | null>(null);
 
   const pageCount = Math.max(1, Math.ceil(postsPage.total / worksPerPage));
@@ -170,6 +174,42 @@ export function WorksArchivePage({ currentPath }: WorksArchivePageProps) {
     syncWorksUrl(1, activeRegion, nextCategory);
   }
 
+  function clearFilters() {
+    if (activeRegion === "all" && activeCategory === "all") return;
+    captureGridState();
+    setActiveRegion("all");
+    setActiveCategory("all");
+    setCurrentPage(1);
+    syncWorksUrl(1, "all", "all");
+  }
+
+  const regionOptions: FilterOption[] = [
+    { value: "all", label: "全部地區" },
+    ...REGION_OPTIONS.map((region) => ({ value: region, label: REGION_LABELS[region] })),
+  ];
+  const categoryOptions: FilterOption[] = [
+    { value: "all", label: "全部分類" },
+    ...CATEGORY_OPTIONS.map((category) => ({ value: category, label: CATEGORY_LABELS[category] })),
+  ];
+  const regionGroup = (idPrefix: string) => (
+    <FilterGroup
+      legend="地區"
+      name={`${idPrefix}-region`}
+      options={regionOptions}
+      value={activeRegion}
+      onChange={(value) => changeRegion(value as RegionFilter)}
+    />
+  );
+  const categoryGroup = (idPrefix: string) => (
+    <FilterGroup
+      legend="分類"
+      name={`${idPrefix}-category`}
+      options={categoryOptions}
+      value={activeCategory}
+      onChange={(value) => changeCategory(value as CategoryFilter)}
+    />
+  );
+
   function goToPage(nextPage: number) {
     const clampedPage = Math.min(Math.max(nextPage, 1), pageCount);
     if (clampedPage === safeCurrentPage) return;
@@ -196,51 +236,61 @@ export function WorksArchivePage({ currentPath }: WorksArchivePageProps) {
           </div>
         </header>
 
-        <div className="works-filter" aria-label="學生作品篩選">
-          <div className="works-filter__group" aria-label="地區篩選">
+        {isMobile ? (
+          <div className="works-filter works-filter--compact">
             <button
               type="button"
-              className={activeRegion === "all" ? "is-active" : ""}
-              aria-pressed={activeRegion === "all"}
-              onClick={() => changeRegion("all")}
+              className="button button--secondary works-filter__open"
+              aria-haspopup="dialog"
+              onClick={() => setFilterSheetOpen(true)}
             >
-              全部
+              篩選{activeFilterCount ? `（${activeFilterCount}）` : ""}
             </button>
-            {REGION_OPTIONS.map((region) => (
-              <button
-                key={region}
-                type="button"
-                className={activeRegion === region ? "is-active" : ""}
-                aria-pressed={activeRegion === region}
-                onClick={() => changeRegion(region)}
-              >
-                {REGION_LABELS[region]}
-              </button>
-            ))}
-          </div>
-          <span className="works-filter__divider" aria-hidden="true" />
-          <div className="works-filter__group" aria-label="分類篩選">
-            <button
-              type="button"
-              className={activeCategory === "all" ? "is-active" : ""}
-              aria-pressed={activeCategory === "all"}
-              onClick={() => changeCategory("all")}
+            {activeFilterCount ? (
+              <ul className="works-filter__active" aria-label="目前篩選條件">
+                {activeRegion !== "all" ? (
+                  <li>
+                    <button type="button" className="filter-chip is-selected" onClick={() => changeRegion("all")}>
+                      {REGION_LABELS[activeRegion]} <span aria-hidden="true">✕</span>
+                      <span className="visually-hidden">（移除地區篩選）</span>
+                    </button>
+                  </li>
+                ) : null}
+                {activeCategory !== "all" ? (
+                  <li>
+                    <button type="button" className="filter-chip is-selected" onClick={() => changeCategory("all")}>
+                      {CATEGORY_LABELS[activeCategory]} <span aria-hidden="true">✕</span>
+                      <span className="visually-hidden">（移除分類篩選）</span>
+                    </button>
+                  </li>
+                ) : null}
+              </ul>
+            ) : null}
+            <BottomSheet
+              open={filterSheetOpen}
+              title="篩選作品"
+              onClose={() => setFilterSheetOpen(false)}
+              footer={
+                <>
+                  <button type="button" className="button button--secondary" onClick={clearFilters} disabled={!activeFilterCount}>
+                    清除
+                  </button>
+                  <button type="button" className="button button--primary" onClick={() => setFilterSheetOpen(false)}>
+                    {isLoading ? "載入中…" : `查看 ${postsPage.total} 筆作品`}
+                  </button>
+                </>
+              }
             >
-              全部
-            </button>
-            {CATEGORY_OPTIONS.map((category) => (
-              <button
-                key={category}
-                type="button"
-                className={activeCategory === category ? "is-active" : ""}
-                aria-pressed={activeCategory === category}
-                onClick={() => changeCategory(category)}
-              >
-                {CATEGORY_LABELS[category]}
-              </button>
-            ))}
+              {regionGroup("sheet")}
+              {categoryGroup("sheet")}
+            </BottomSheet>
           </div>
-        </div>
+        ) : (
+          <div className="works-filter" aria-label="學生作品篩選">
+            {regionGroup("inline")}
+            {categoryGroup("inline")}
+          </div>
+        )}
 
         {isLoading ? <p className="works-state">學生作品載入中...</p> : null}
         {!isLoading && error ? <p className="works-state works-state--error">{error}</p> : null}
@@ -249,12 +299,7 @@ export function WorksArchivePage({ currentPath }: WorksArchivePageProps) {
         {!isLoading && !error && postsPage.items.length > 0 ? (
           <section ref={gridRef} className="works-grid" aria-label="學生作品列表">
             {postsPage.items.map((post, index) => (
-              <WorkCard
-                key={post.id}
-                post={post}
-                displayNumber={(safeCurrentPage - 1) * worksPerPage + index + 1}
-                layout={layoutSequence[index % layoutSequence.length]}
-              />
+              <WorkCard key={post.id} post={post} displayNumber={(safeCurrentPage - 1) * worksPerPage + index + 1} />
             ))}
           </section>
         ) : null}
@@ -305,42 +350,75 @@ export function WorksArchivePage({ currentPath }: WorksArchivePageProps) {
   );
 }
 
+type FilterOption = { value: string; label: string };
+
+type FilterGroupProps = {
+  legend: string;
+  name: string;
+  options: FilterOption[];
+  value: string;
+  onChange: (value: string) => void;
+};
+
+// 原生 radio：方向鍵切換、表單語意與讀屏群組名稱（fieldset/legend）都由瀏覽器提供。
+function FilterGroup({ legend, name, options, value, onChange }: FilterGroupProps) {
+  return (
+    <fieldset className="filter-group">
+      <legend className="filter-group__legend">{legend}</legend>
+      <div className="filter-group__options">
+        {options.map((option) => (
+          <label key={option.value} className={`filter-chip ${value === option.value ? "is-selected" : ""}`}>
+            <input
+              type="radio"
+              name={name}
+              value={option.value}
+              checked={value === option.value}
+              onChange={() => onChange(option.value)}
+            />
+            <span className="filter-chip__check" aria-hidden="true">
+              ✓
+            </span>
+            {option.label}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
 type WorkCardProps = {
   post: PostListItem;
   displayNumber: number;
-  layout: WorkLayout;
 };
 
-function WorkCard({ post, displayNumber, layout }: WorkCardProps) {
+// 文字放在海報下方（不疊在海報上），海報以 contain 呈現不裁切。
+function WorkCard({ post, displayNumber }: WorkCardProps) {
   const number = String(displayNumber).padStart(2, "0");
   const image = getPostDisplayImage(post);
-  const regionLabel = post.region ? formatPostRegion(post.region) : "未設定地區";
+  const regionLabel = formatPostRegion(post.region);
   const categoryLabel = formatPostCategory(post.category);
 
   return (
-    <article className={`work-card work-card--${layout}`}>
-      <a href={`/posts/${encodeURIComponent(post.slug)}`} className="work-card-link" aria-label={`查看作品：${post.title}`}>
-        {image ? (
-          <SafeImage src={image} alt={post.cover_media?.original_filename ?? post.title} loading={displayNumber > 2 ? "lazy" : "eager"} />
-        ) : (
-          <span className="work-card-placeholder">尚未設定圖片</span>
-        )}
-        <div className="work-card-shade" />
-        <span className="work-card-number">{number}</span>
-        <div className="work-card-content">
-          <p className="work-card-meta">
-            {regionLabel} / {categoryLabel}
+    <article className="work-card">
+      <a href={`/posts/${encodeURIComponent(post.slug)}`} className="work-card-link">
+        <SafeImage
+          ratio="poster"
+          frameClassName="work-card__media"
+          src={image}
+          alt=""
+          fallbackLabel="尚未設定圖片"
+          loading={displayNumber > 3 ? "lazy" : "eager"}
+          decoding="async"
+        />
+        <div className="work-card__body">
+          <p className="work-card__meta">
+            <span className="work-card__number">{number}</span>
+            <span>{regionLabel}</span>
+            <span>{categoryLabel}</span>
           </p>
-          <h2>{post.title}</h2>
-          <p className="work-card-description">{summarizePost(post)}</p>
+          <h2 className="work-card__title">{post.title}</h2>
+          <p className="work-card__summary">{summarizePost(post)}</p>
         </div>
-        {layout === "feature" ? (
-          <div className="work-card-arrow">
-            <span>{number}</span>
-            <span className="arrow-line" />
-            <span>查看</span>
-          </div>
-        ) : null}
       </a>
     </article>
   );

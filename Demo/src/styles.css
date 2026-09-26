@@ -14,6 +14,59 @@
   --timeline-gutter: clamp(24px, 6vw, 88px);
   --timeline-max-width: 1180px;
   --timeline-panel-radius: 8px;
+
+  /*
+   * Responsive design tokens（RESPONSIVE_UIUX_AUDIT.md）。
+   * #D0B947 只用於圖形、邊框、裝飾與底色；淺底上的金色文字一律用 --color-gold-ink（5.09:1）。
+   */
+  --color-gold: #d0b947;
+  --color-gold-ink: #7d6a16;
+  --color-ink: #35444c;
+  --color-deep: #26343a;
+  --color-paper: #fbfaf5;
+  --color-surface: #fffdf7;
+  --color-surface-sunken: #f4f1e8;
+  --color-gray: #ced2d1;
+  --color-pink: #e4d5cc;
+  --color-muted: #66767d;
+  --color-line: rgb(53 68 76 / 18%);
+  --color-line-strong: rgb(53 68 76 / 32%);
+
+  /* 斷點：CSS custom property 不能用在 @media，數值與 src/shared/breakpoints.ts 保持一致。 */
+  --bp-mobile-max: 639px; /* Mobile  < 640 */
+  --bp-tablet: 640px; /* Tablet  640–1023 */
+  --bp-desktop: 1024px; /* Desktop ≥ 1024 */
+  --container-max: 1180px;
+  --gutter-mobile: 20px;
+  --gutter-tablet: 40px;
+  --gutter-desktop: clamp(40px, 6vw, 88px);
+  --gutter: var(--gutter-desktop);
+  --header-height: 76px;
+
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-96: 96px;
+  --space-128: 128px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  --font-serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --font-sans: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
+  --type-h1: 64px;
+  --type-h2: 44px;
+  --type-h3: 28px;
+  --type-body: 17px;
+  --type-small: 15px;
+  --touch-target: 44px;
   color: var(--ink);
   background: var(--paper);
   font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
@@ -82,7 +135,6 @@ canvas {
 }
 
 .place-node__photo .media-fallback,
-.event-card__media .media-fallback,
 .post-page__cover .media-fallback,
 .admin-media-preview .media-fallback {
   height: 100%;
@@ -485,11 +537,6 @@ canvas {
   line-height: 1.9;
 }
 
-/* 詳細註解：.chapter-copy__mobile-media 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.chapter-copy__mobile-media {
-  display: none;
-}
-
 /* 詳細註解：.timeline-progress 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
 .timeline-progress {
   position: absolute;
@@ -742,202 +789,6 @@ canvas {
   color: var(--muted);
   font-size: 15px;
   line-height: 1.8;
-}
-
-/* 詳細註解：.story-detail 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail {
-  display: grid;
-  grid-template-columns: minmax(360px, 0.9fr) minmax(0, 1fr);
-  gap: clamp(34px, 6vw, 86px);
-  align-items: start;
-  width: min(100% - var(--timeline-gutter) * 2, var(--timeline-max-width));
-  margin: 0 auto;
-  padding: 24px 0 110px;
-}
-
-/* 詳細註解：.story-detail__media 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__media {
-  position: sticky;
-  top: 112px;
-}
-
-.story-detail__image-link {
-  display: block;
-  overflow: hidden;
-  border-radius: 0 86px 0 0;
-  color: inherit;
-}
-
-/* 詳細註解：.story-detail__media img 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__media img {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  border-radius: 0 86px 0 0;
-  object-fit: cover;
-  box-shadow: 0 30px 90px rgb(53 68 76 / 16%);
-  transition: transform 220ms ease;
-}
-
-.story-detail__image-link:hover img,
-.story-detail__image-link:focus-visible img {
-  transform: scale(1.01);
-}
-
-.story-detail__image-link:focus-visible,
-.story-detail__title-row h2 a:focus-visible,
-.story-detail__article-link:focus-visible {
-  outline: 3px solid rgb(208 185 71 / 34%);
-  outline-offset: 5px;
-}
-
-/* 詳細註解：.story-detail__palette 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__palette {
-  display: flex;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-/* 詳細註解：.story-detail__palette span 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__palette span {
-  width: 56px;
-  height: 10px;
-  border: 1px solid rgb(53 68 76 / 12%);
-}
-
-/* 詳細註解：.story-detail__copy 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__copy {
-  border-top: 1px solid var(--line);
-  padding-top: 30px;
-}
-
-/* 詳細註解：.story-detail__title-row 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__title-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 18px;
-  align-items: start;
-  margin-bottom: 24px;
-}
-
-/* 詳細註解：.story-detail__title-row span 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__title-row span {
-  color: rgb(53 68 76 / 24%);
-  font-family: Georgia, serif;
-  font-size: clamp(64px, 8vw, 108px);
-  font-weight: 800;
-  line-height: 0.86;
-}
-
-/* 詳細註解：.story-detail__title-row h2 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__title-row h2 {
-  margin: 0;
-  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
-  font-size: clamp(42px, 5.2vw, 72px);
-  line-height: 1.12;
-}
-
-.story-detail__title-row h2 a {
-  display: inline;
-  background-image: linear-gradient(var(--gold), var(--gold));
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  background-size: 0 3px;
-  color: inherit;
-  transition:
-    background-size 180ms ease,
-    color 180ms ease;
-}
-
-.story-detail__title-row h2 a:hover,
-.story-detail__title-row h2 a:focus-visible {
-  background-size: 100% 3px;
-  color: var(--green);
-}
-
-/* 詳細註解：.story-detail__copy strong 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__copy strong {
-  display: block;
-  max-width: 680px;
-  margin-bottom: 24px;
-  color: var(--green);
-  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
-  font-size: clamp(23px, 2.3vw, 34px);
-  font-weight: 700;
-  line-height: 1.55;
-}
-
-/* 詳細註解：.story-detail__copy > p:not(.eyebrow) 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__copy > p:not(.eyebrow) {
-  max-width: 680px;
-  margin: 0 0 18px;
-  color: var(--muted);
-  font-size: 17px;
-  line-height: 1.95;
-}
-
-.story-detail__article-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  gap: 10px;
-  margin-top: 10px;
-  color: var(--green);
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition:
-    color 180ms ease,
-    transform 180ms ease;
-}
-
-.story-detail__article-link svg {
-  color: var(--gold);
-  transition: transform 180ms ease;
-}
-
-.story-detail__article-link:hover,
-.story-detail__article-link:focus-visible {
-  color: var(--gold);
-  transform: translateX(3px);
-}
-
-.story-detail__article-link:hover svg,
-.story-detail__article-link:focus-visible svg {
-  transform: translateX(3px);
-}
-
-/* 詳細註解：.story-detail__copy dl 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__copy dl {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
-  margin: 38px 0 0;
-  padding: 1px;
-  background: var(--line);
-}
-
-/* 詳細註解：.story-detail__copy dl div 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__copy dl div {
-  min-height: 112px;
-  padding: 18px;
-  background: rgb(251 250 245 / 92%);
-}
-
-/* 詳細註解：.story-detail__copy dt 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__copy dt {
-  color: var(--gold);
-  font-size: 13px;
-  font-weight: 900;
-}
-
-/* 詳細註解：.story-detail__copy dd 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.story-detail__copy dd {
-  margin: 12px 0 0;
-  color: var(--green);
-  font-size: 17px;
-  font-weight: 800;
-  line-height: 1.5;
 }
 
 /* 詳細註解：.story-guide 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
@@ -1884,20 +1735,6 @@ canvas {
   transition: transform 420ms ease;
 }
 
-.work-card-placeholder {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background:
-    linear-gradient(135deg, rgb(208 185 71 / 16%), rgb(53 68 76 / 20%)),
-    var(--green);
-  color: rgb(251 250 245 / 78%);
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: 0;
-}
-
 .work-card-link:hover img,
 /* 詳細註解：.work-card-link:focus-visible img 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
 .work-card-link:focus-visible img {
@@ -1908,89 +1745,6 @@ canvas {
 .work-card-link:focus-visible {
   outline: 3px solid var(--gold);
   outline-offset: 4px;
-}
-
-/* 詳細註解：.works-archive .work-card-shade 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.works-archive .work-card-shade {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(0deg, rgb(14 22 26 / 66%) 0%, rgb(14 22 26 / 28%) 32%, transparent 58%);
-}
-
-/* 詳細註解：.work-card-number 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.work-card-number {
-  position: absolute;
-  top: 22px;
-  left: 24px;
-  z-index: 2;
-  color: rgb(251 250 245 / 72%);
-  font-family: Georgia, serif;
-  font-size: clamp(44px, 6vw, 92px);
-  font-weight: 800;
-  line-height: 0.9;
-}
-
-/* 詳細註解：.works-archive .work-card-content 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.works-archive .work-card-content {
-  position: absolute;
-  left: 28px;
-  bottom: 28px;
-  z-index: 2;
-  width: min(520px, calc(100% - 56px));
-  min-width: 0;
-}
-
-/* 詳細註解：.works-archive .work-card-meta 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.works-archive .work-card-meta {
-  margin: 0 0 10px;
-  color: var(--gold);
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-/* 詳細註解：.work-card-content h2 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.work-card-content h2 {
-  margin: 0;
-  color: var(--paper);
-  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
-  font-size: clamp(30px, 4.4vw, 62px);
-  line-height: 1.08;
-  letter-spacing: 0;
-  text-wrap: balance;
-  overflow-wrap: anywhere;
-}
-
-/* 詳細註解：.works-archive .work-card-description 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.works-archive .work-card-description {
-  max-width: 470px;
-  margin: 14px 0 0;
-  color: rgb(251 250 245 / 82%);
-  font-size: 15px;
-  line-height: 1.75;
-  overflow-wrap: anywhere;
-}
-
-/* 詳細註解：.works-archive .work-card-arrow 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.works-archive .work-card-arrow {
-  position: absolute;
-  right: 28px;
-  bottom: 30px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--paper);
-  font-weight: 900;
-}
-
-/* 詳細註解：.arrow-line 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.arrow-line {
-  width: 58px;
-  height: 1px;
-  background: rgb(251 250 245 / 72%);
 }
 
 /* 詳細註解：.works-bottom 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
@@ -2443,14 +2197,6 @@ canvas {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .story-detail {
-    grid-template-columns: minmax(300px, 0.82fr) minmax(0, 1fr);
-  }
-
-  .story-detail__copy dl {
-    grid-template-columns: 1fr;
-  }
-
   .system-notes {
     grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
     gap: 44px;
@@ -2788,55 +2534,6 @@ canvas {
     opacity: 1;
   }
 
-  .chapter-copy__mobile-media {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-    width: auto;
-    margin: 0 0 24px;
-  }
-
-  .chapter-copy__mobile-media figure {
-    position: relative;
-    min-width: 0;
-    margin: 0;
-    overflow: hidden;
-    aspect-ratio: 4 / 3;
-    border: 1px solid rgb(53 68 76 / 14%);
-    border-radius: var(--timeline-panel-radius);
-    background: var(--paper);
-    box-shadow: 0 18px 44px rgb(53 68 76 / 12%);
-  }
-
-  .chapter-copy__mobile-media figure:first-child {
-    grid-column: 1 / -1;
-    aspect-ratio: 16 / 10;
-  }
-
-  .chapter-copy__mobile-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    background: rgb(251 250 245 / 72%);
-  }
-
-  .chapter-copy__mobile-media figcaption {
-    position: absolute;
-    left: 12px;
-    bottom: 12px;
-    display: inline-flex;
-    align-items: center;
-    min-height: 30px;
-    border-radius: 999px;
-    padding: 6px 10px;
-    background: rgb(251 250 245 / 88%);
-    color: var(--green);
-    font-size: 12px;
-    font-weight: 900;
-    line-height: 1;
-    box-shadow: 0 10px 24px rgb(53 68 76 / 14%);
-  }
-
   .chapter-copy > p,
   .chapter-copy > span,
   .chapter-copy h2,
@@ -2880,34 +2577,6 @@ canvas {
     font-size: 15px;
   }
 
-  .story-detail {
-    grid-template-columns: 1fr;
-    width: calc(100% - 32px);
-    padding-bottom: 72px;
-  }
-
-  .story-detail__media {
-    position: static;
-  }
-
-  .story-detail__media img {
-    aspect-ratio: 16 / 11;
-    border-radius: var(--timeline-panel-radius);
-  }
-
-  .story-detail__image-link {
-    border-radius: var(--timeline-panel-radius);
-  }
-
-  .story-detail__title-row {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .story-detail__copy dl {
-    grid-template-columns: 1fr;
-  }
-
   .story-guide {
     grid-template-columns: 1fr;
   }
@@ -2921,23 +2590,6 @@ canvas {
 
   .guide-card:first-child {
     border-top: 0;
-  }
-
-  .story-detail__title-row span {
-    font-size: 64px;
-  }
-
-  .story-detail__title-row h2 {
-    font-size: 40px;
-  }
-
-  .story-detail__copy strong {
-    font-size: 25px;
-  }
-
-  .story-detail__copy > p:not(.eyebrow) {
-    font-size: 16px;
-    line-height: 1.85;
   }
 
   .system-notes {
@@ -3144,11 +2796,6 @@ canvas {
     padding-bottom: 24px;
   }
 
-  .chapter-copy__mobile-media {
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
   .chapter-copy > span {
     font-size: 72px;
   }
@@ -3171,19 +2818,6 @@ canvas {
 
   .timeline-card h2 {
     font-size: 24px;
-  }
-
-  .story-detail__title-row h2 {
-    font-size: 36px;
-  }
-
-  .story-detail__copy strong {
-    font-size: 23px;
-  }
-
-  .story-detail__copy dl div {
-    min-height: 0;
-    padding: 16px;
   }
 
   .site-footer__brand img {
@@ -3227,7 +2861,6 @@ canvas {
     width: 68px;
   }
 
-  .story-detail__title-row h2,
   .chapter-copy h2 {
     font-size: 32px;
   }
@@ -3900,228 +3533,6 @@ canvas {
   color: #9d3f2f;
 }
 
-/* 詳細註解：.timeline-item 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.timeline-item {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(150px, 0.24fr) 42px minmax(0, 1fr);
-  gap: clamp(20px, 4vw, 54px);
-  align-items: start;
-  min-width: 0;
-}
-
-/* 詳細註解：.timeline-date 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.timeline-date {
-  position: sticky;
-  top: 112px;
-  padding-top: 4px;
-}
-
-/* 詳細註解：.timeline-date time 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.timeline-date time {
-  display: grid;
-  gap: 6px;
-}
-
-/* 詳細註解：.timeline-date__year 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.timeline-date__year {
-  color: var(--gold);
-  font-family: Georgia, serif;
-  font-size: clamp(34px, 4.4vw, 56px);
-  font-weight: 800;
-  line-height: 0.95;
-}
-
-/* 詳細註解：.timeline-date__day 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.timeline-date__day {
-  color: var(--green);
-  font-family: Georgia, serif;
-  font-size: clamp(24px, 2.6vw, 36px);
-  font-weight: 800;
-  line-height: 1;
-}
-
-/* 詳細註解：.timeline-date__place 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.timeline-date__place {
-  margin: 18px 0 0;
-  color: rgb(53 68 76 / 68%);
-  font-size: 14px;
-  font-weight: 900;
-  line-height: 1.5;
-}
-
-/* 詳細註解：.timeline-axis 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.timeline-axis {
-  position: relative;
-  display: grid;
-  justify-items: center;
-  align-self: stretch;
-  min-height: 100%;
-}
-
-/* 詳細註解：.timeline-axis__dot 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.timeline-axis__dot {
-  position: relative;
-  z-index: 1;
-  width: 18px;
-  height: 18px;
-  margin-top: 12px;
-  border-radius: 50%;
-  background: var(--gold);
-  box-shadow:
-    0 0 0 7px var(--paper),
-    0 0 0 8px rgb(53 68 76 / 14%);
-}
-
-/* 詳細註解：.timeline-axis__line 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.timeline-axis__line {
-  position: absolute;
-  top: 30px;
-  bottom: -52px;
-  width: 2px;
-  background: linear-gradient(var(--gold), rgb(206 210 209 / 74%));
-}
-
-/* 詳細註解：.timeline-item:last-child .timeline-axis__line 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.timeline-item:last-child .timeline-axis__line {
-  bottom: 0;
-}
-
-/* 詳細註解：.event-card 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card {
-  display: grid;
-  grid-template-columns: minmax(240px, 0.42fr) minmax(0, 1fr);
-  min-width: 0;
-  margin-bottom: 44px;
-  overflow: hidden;
-  border: 1px solid rgb(53 68 76 / 12%);
-  border-radius: 10px;
-  background: rgb(251 250 245 / 86%);
-  box-shadow: 0 24px 72px rgb(53 68 76 / 10%);
-  transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms ease;
-}
-
-.event-card:hover,
-/* 詳細註解：.event-card:focus-within 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card:focus-within {
-  border-color: rgb(208 185 71 / 64%);
-  box-shadow: 0 30px 88px rgb(53 68 76 / 16%);
-  transform: translateY(-3px);
-}
-
-/* 詳細註解：.event-card__media 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card__media {
-  min-width: 0;
-  overflow: hidden;
-  background: var(--gray);
-}
-
-/* 詳細註解：.event-card__media img 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card__media img {
-  width: 100%;
-  height: 100%;
-  min-height: 350px;
-  object-fit: cover;
-  transition: transform 220ms ease;
-}
-
-/* 詳細註解：.event-card:hover .event-card__media img 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card:hover .event-card__media img {
-  transform: scale(1.035);
-}
-
-/* 詳細註解：.event-card__content 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card__content {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 28px;
-  align-items: end;
-  min-width: 0;
-  padding: clamp(28px, 4vw, 46px);
-}
-
-/* 詳細註解：.event-card__copy 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card__copy {
-  min-width: 0;
-}
-
-/* 詳細註解：.event-card__type 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card__type {
-  margin: 0 0 12px;
-  color: var(--gold);
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-}
-
-/* 詳細註解：.event-card__title 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card__title {
-  margin: 0;
-  color: var(--green);
-  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
-  font-size: clamp(30px, 3.6vw, 48px);
-  line-height: 1.14;
-}
-
-/* 詳細註解：.event-card__description 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card__description {
-  max-width: 620px;
-  margin: 18px 0 0;
-  color: rgb(53 68 76 / 78%);
-  font-size: 16px;
-  line-height: 1.9;
-}
-
-/* 詳細註解：.event-card__button 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card__button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  min-width: 134px;
-  min-height: 46px;
-  border: 1px solid var(--gold);
-  border-radius: 999px;
-  padding: 11px 16px 11px 18px;
-  background: var(--gold);
-  color: var(--paper);
-  font-size: 14px;
-  font-weight: 900;
-  cursor: pointer;
-  text-decoration: none;
-  transition:
-    background 180ms ease,
-    color 180ms ease,
-    transform 180ms ease;
-}
-
-.event-card__button:hover,
-/* 詳細註解：.event-card__button:focus-visible 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.event-card__button:focus-visible {
-  background: var(--green);
-  color: var(--paper);
-  outline: none;
-  transform: translateX(3px);
-}
-
-/* 詳細註解：@media (max-width: 1180px) 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-@media (max-width: 1180px) {
-  .event-card {
-    grid-template-columns: minmax(220px, 0.46fr) minmax(0, 1fr);
-  }
-
-  .event-card__content {
-    grid-template-columns: 1fr;
-  }
-
-  .event-card__button {
-    width: fit-content;
-  }
-}
-
 /* 詳細註解：@media (max-width: 900px) 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
 @media (max-width: 900px) {
   .events-page-hero {
@@ -4144,78 +3555,6 @@ canvas {
     gap: 10px;
   }
 
-  .timeline-item {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
-    padding-left: 38px;
-  }
-
-  .timeline-date {
-    position: static;
-  }
-
-  .timeline-date time {
-    grid-template-columns: auto auto;
-    align-items: baseline;
-    justify-content: start;
-    gap: 10px;
-  }
-
-  .timeline-date__place {
-    margin-top: 8px;
-  }
-
-  .timeline-axis {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 24px;
-  }
-
-  .timeline-axis__dot {
-    width: 14px;
-    height: 14px;
-    margin-top: 7px;
-    box-shadow:
-      0 0 0 5px var(--paper),
-      0 0 0 6px rgb(53 68 76 / 14%);
-  }
-
-  .timeline-axis__line {
-    top: 20px;
-    bottom: -44px;
-  }
-
-  .event-card {
-    grid-template-columns: 1fr;
-    border-radius: 10px;
-  }
-
-  .event-card__media {
-    aspect-ratio: 16 / 10;
-  }
-
-  .event-card__media img {
-    min-height: 0;
-  }
-
-  .event-card__content {
-    display: block;
-    padding: 24px 22px;
-  }
-
-  .event-card__title {
-    font-size: 27px;
-  }
-
-  .event-card__description {
-    margin-top: 12px;
-  }
-
-  .event-card__button {
-    margin-top: 22px;
-  }
 }
 
 /* 詳細註解：@media (max-width: 600px) 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
@@ -4252,26 +3591,6 @@ canvas {
     padding: 58px 0 78px;
   }
 
-  .timeline-date__year {
-    font-size: 30px;
-  }
-
-  .timeline-date__day {
-    font-size: 23px;
-  }
-
-  .event-card__button {
-    width: 100%;
-  }
-}
-
-/* 詳細註解：@media (prefers-reduced-motion: reduce) 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-@media (prefers-reduced-motion: reduce) {
-  .event-card,
-  .event-card__media img,
-  .event-card__button {
-    transition: none;
-  }
 }
 
 /* 詳細註解：.place-journey 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
@@ -5092,24 +4411,6 @@ canvas {
     min-height: 500px;
   }
 
-  .work-card-content {
-    left: 22px;
-    bottom: 24px;
-    width: calc(100% - 44px);
-  }
-
-  .work-card-content h2 {
-    font-size: 30px;
-  }
-
-  .work-card-description {
-    font-size: 13px;
-  }
-
-  .work-card-arrow {
-    display: none;
-  }
-
   .works-bottom {
     grid-template-columns: 1fr auto;
     gap: 20px;
@@ -5185,32 +4486,6 @@ canvas {
     min-height: 340px;
   }
 
-  .work-card-number {
-    left: 18px;
-    top: 18px;
-    font-size: 48px;
-  }
-
-  .works-archive .work-card-content {
-    left: 20px;
-    bottom: 22px;
-    width: calc(100% - 40px);
-  }
-
-  .works-archive .work-card-content h2 {
-    font-size: 25px;
-    line-height: 1.12;
-    overflow-wrap: anywhere;
-  }
-
-  .works-archive .work-card-description {
-    display: none;
-  }
-
-  .works-archive .work-card-shade {
-    background: linear-gradient(0deg, rgb(14 22 26 / 62%) 0%, rgb(14 22 26 / 18%) 30%, transparent 42%) !important;
-  }
-
   .works-bottom {
     grid-template-columns: 1fr;
   }
@@ -5235,40 +4510,6 @@ canvas {
   background: none !important;
 }
 
-/* 詳細註解：.works-archive .work-card-shade 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.works-archive .work-card-shade {
-  inset: 0 !important;
-  z-index: 1 !important;
-  background: linear-gradient(0deg, rgb(14 22 26 / 58%) 0%, rgb(14 22 26 / 24%) 30%, transparent 56%) !important;
-}
-
-/* 詳細註解：.works-archive .work-card-link img 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.works-archive .work-card-link img {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  max-width: none !important;
-  object-fit: cover !important;
-  filter: brightness(1.06) saturate(1.02);
-}
-
-/* 詳細註解：.works-archive .work-card-link 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.works-archive .work-card-link {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 100% !important;
-}
-
-.works-archive .work-card-content,
-.works-archive .work-card-meta,
-/* 詳細註解：.works-archive .work-card-description 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
-.works-archive .work-card-description {
-  max-width: 100%;
-  min-width: 0;
-}
 /* Admin */
 /* 詳細註解：.admin-shell 區塊定義相關元素的版面、視覺狀態或響應式規則。 */
 .admin-shell {

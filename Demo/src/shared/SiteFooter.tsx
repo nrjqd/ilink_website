@@ -30,7 +30,6 @@ export function SiteFooter() {
             width="209"
             height="80"
             loading="lazy"
-            disableAutoCrossOrigin
           />
         </a>
         <p>{settings.footer_description}</p>

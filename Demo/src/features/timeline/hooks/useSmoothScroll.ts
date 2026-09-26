@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useMediaQuery } from "./useMediaQuery";
+import { IMMERSIVE_QUERY, REDUCED_MOTION_QUERY } from "../../../shared/breakpoints";
 
 let activeLenis: Lenis | null = null;
 
@@ -77,9 +79,15 @@ export function scrollToPageY(
   waitForScrollPosition(top, complete);
 }
 
+// Lenis 只在沉浸式桌機啟用（≥1024、hover + fine pointer、未要求減少動態）；
+// 手機與平板一律原生捲動，scrollToPageY 會自動改用 window.scrollTo。
 export function useSmoothScroll(disabled: boolean) {
+  const supportsSmoothScroll = useMediaQuery(IMMERSIVE_QUERY);
+  const reducedMotion = useMediaQuery(REDUCED_MOTION_QUERY);
+  const enabled = !disabled && supportsSmoothScroll && !reducedMotion;
+
   useEffect(() => {
-    if (disabled) return;
+    if (!enabled) return;
 
     const lenis = new Lenis({
       lerp: 0.08,
@@ -135,5 +143,5 @@ export function useSmoothScroll(disabled: boolean) {
       }
       lenis.destroy();
     };
-  }, [disabled]);
+  }, [enabled]);
 }

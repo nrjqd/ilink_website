@@ -24,6 +24,17 @@ interface StoryPanelProps {
   dimmed?: boolean;
 }
 
+/**
+ * WebGL texture 必須以 CORS（anonymous）載入，而一般 DOM <img> 不帶 crossOrigin。
+ * 兩者若共用同一個 URL，先被 no-cors 快取的回應沒有 Access-Control-Allow-Origin，
+ * 之後的 texture 請求就會 CORS 失敗（RWD-002）。加上查詢參數讓 texture 使用獨立的快取鍵；
+ * R2 public URL 會忽略查詢參數並回傳同一個物件。
+ */
+function textureRequestUrl(src: string) {
+  if (!/^https?:\/\//i.test(src)) return src;
+  return `${src}${src.includes("?") ? "&" : "?"}cors=texture`;
+}
+
 const BASE_MAX_WIDTH = 2.55;
 const BASE_MAX_HEIGHT = 1.76;
 const DEFAULT_ASPECT =
@@ -276,7 +287,7 @@ function StoryPanelComponent({
     }
 
     loader.load(
-      src,
+      textureRequestUrl(src),
 
       (nextTexture) => {
         if (cancelled) {
