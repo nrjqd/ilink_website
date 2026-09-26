@@ -1,4 +1,8 @@
 User-agent: *
+Allow: /
+
+# CMS 管理後台與 API 不需要被索引（後台另有 noindex meta 與 X-Robots-Tag header）。
+Disallow: /admin
 Disallow: /api/
 
 Sitemap: https://usckh.com/sitemap.xml

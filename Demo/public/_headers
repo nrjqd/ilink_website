@@ -1,0 +1,17 @@
+# Cloudflare Pages response headers.
+# CMS 後台：即使被外部連結指到也不要被索引（伺服器層 noindex，不依賴 JavaScript）。
+/admin
+  X-Robots-Tag: noindex, nofollow
+
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+
+/sitemap.xml
+  Content-Type: application/xml; charset=utf-8
+
+# Cloudflare Pages 預設網域與預覽部署：內容與 usckh.com 重複，不應被索引。
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex

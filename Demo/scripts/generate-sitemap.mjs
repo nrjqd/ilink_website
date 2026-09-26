@@ -3,6 +3,8 @@ import { resolve } from "node:path";
 
 const DEFAULT_SITE_URL = "https://usckh.com";
 const STATIC_ROUTES = ["/", "/places", "/works", "/events", "/impact", "/about"];
+// Render 免費方案冷啟動可能要數十秒；逾時就只輸出固定頁，不讓 build 卡住或失敗。
+const FETCH_TIMEOUT_MS = Number(process.env.SITEMAP_FETCH_TIMEOUT_MS || 45000);
 
 function loadLocalEnv(name) {
   try {
@@ -43,6 +45,12 @@ function escapeXml(value) {
     .replace(/'/g, "&apos;");
 }
 
+function toW3cDate(value) {
+  if (!value) return undefined;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
 function isValidSlug(slug) {
   return typeof slug === "string" && slug.trim() !== "" && !/[/?#\\\s]/.test(slug);
 }
@@ -61,7 +69,10 @@ async function fetchPublishedPosts() {
     url.searchParams.set("page", String(page));
     url.searchParams.set("limit", String(limit));
 
-    const response = await fetch(url, { headers: { accept: "application/json" } });
+    const response = await fetch(url, {
+      headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
     if (!response.ok) throw new Error(`Posts API returned ${response.status}`);
 
     const payload = await response.json();
@@ -77,7 +88,7 @@ async function fetchPublishedPosts() {
     .filter((post) => post?.status === "published" && isValidSlug(post.slug))
     .map((post) => ({
       loc: absoluteUrl(`/posts/${encodeURIComponent(post.slug)}`),
-      lastmod: post.updated_at || post.published_at || undefined,
+      lastmod: toW3cDate(post.updated_at || post.published_at),
     }));
 }
 

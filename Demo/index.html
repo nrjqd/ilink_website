@@ -1,27 +1,48 @@
 <!doctype html>
 <!-- 中文註解：Vite 前端的 HTML 入口，React 會掛載到 #root。 -->
+<!-- 以下 meta 是首頁預設值，也是不執行 JavaScript 的爬蟲（社群預覽）看到的內容；
+     React 載入後由 src/shared/seo.ts 依路由整批更新。刻意不放 canonical / og:url，
+     避免所有 SPA 路由在 JS 執行前都宣告自己是首頁。 -->
 <html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-site-verification" content="fzqIFbxFsmt_SA-_k1usRNeEOwp3MXI5rMI1VLTXFpY" />
+    <title>I-LINK｜旗山、美濃、內門的地方文化與學習行動</title>
     <meta
       name="description"
-      content="I-LINK 走進旗山、美濃、內門，整理地方故事、學生作品、活動現場與成果亮點。"
+      content="I-LINK 走進高雄旗山、美濃、內門，整理地方故事、學生作品、活動現場與成果，記錄地方文化、產業與教育行動。"
     />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="theme-color" content="#fbfaf5" />
     <link
       rel="icon"
       href="https://pub-7a1b6685560e457bad83e2c14242ce38.r2.dev/branding/favicon/i-link-logo-header-small.png"
       type="image/png"
     />
-    <meta property="og:title" content="I-LINK｜旗美內門地方故事與成果平台" />
+    <meta property="og:site_name" content="I-LINK" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="I-LINK｜旗山、美濃、內門的地方文化與學習行動" />
     <meta
       property="og:description"
-      content="看見旗山、美濃、內門的地方故事、學生作品、活動現場與年度成果。"
+      content="I-LINK 走進高雄旗山、美濃、內門，整理地方故事、學生作品、活動現場與成果，記錄地方文化、產業與教育行動。"
     />
-    <meta property="og:url" content="https://usckh.com/" />
-    <meta property="og:type" content="website" />
-    <title>看故事｜I-LINK 旗美內門地方內容平台</title>
+    <meta
+      property="og:image"
+      content="https://pub-7a1b6685560e457bad83e2c14242ce38.r2.dev/assets/img/1020/1020iLink%E7%BE%8E%E6%BF%83%E8%97%8D%E6%9F%93%E6%96%87%E5%89%B5%E8%A8%AD%E8%A8%88%E5%B7%A5%E5%9D%8A_001.webp"
+    />
+    <meta property="og:image:alt" content="I-LINK 美濃藍染文創設計工坊現場" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="I-LINK｜旗山、美濃、內門的地方文化與學習行動" />
+    <meta
+      name="twitter:description"
+      content="I-LINK 走進高雄旗山、美濃、內門，整理地方故事、學生作品、活動現場與成果，記錄地方文化、產業與教育行動。"
+    />
+    <meta
+      name="twitter:image"
+      content="https://pub-7a1b6685560e457bad83e2c14242ce38.r2.dev/assets/img/1020/1020iLink%E7%BE%8E%E6%BF%83%E8%97%8D%E6%9F%93%E6%96%87%E5%89%B5%E8%A8%AD%E8%A8%88%E5%B7%A5%E5%9D%8A_001.webp"
+    />
     <!-- 中文註解：品牌字體；只載入實際使用的字重，Google Fonts 以 unicode-range 分片只下載頁面用到的字。 -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,6 +54,26 @@
   <body>
     <!-- 中文註解：React 應用的掛載點。 -->
     <div id="root"></div>
+    <!-- 中文註解：不執行 JavaScript 的環境仍可看到網站主題與主要入口連結。 -->
+    <noscript>
+      <main>
+        <h1>I-LINK｜旗山、美濃、內門的地方文化與學習行動</h1>
+        <p>
+          I-LINK 走進高雄旗山、美濃、內門，整理地方故事、學生作品、活動現場與成果，記錄地方文化、產業與教育行動。
+          請啟用 JavaScript 以瀏覽完整內容。
+        </p>
+        <nav aria-label="主要頁面">
+          <ul>
+            <li><a href="/">看故事</a></li>
+            <li><a href="/places">逛地方：旗山、美濃、內門</a></li>
+            <li><a href="/works">學生作品</a></li>
+            <li><a href="/events">活動現場</a></li>
+            <li><a href="/impact">成果總覽</a></li>
+            <li><a href="/about">關於 I-LINK</a></li>
+          </ul>
+        </nav>
+      </main>
+    </noscript>
     <!-- 中文註解：載入 TypeScript/React 的前端入口檔。 -->
     <script type="module" src="/src/main.tsx"></script>
   </body>

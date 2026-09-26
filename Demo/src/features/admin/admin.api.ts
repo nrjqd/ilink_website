@@ -225,17 +225,32 @@ function formatValidationDetails(details: ValidationErrorDetail[]) {
     .join("; ");
 }
 
+/** API 錯誤：保留 HTTP status 與後端 error.code，讓 UI 能區分登入逾時、資源衝突等情況。 */
+export class ApiError extends Error {
+  readonly status: number;
+  readonly code: string | null;
+
+  constructor(message: string, status: number, code: string | null) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.code = code;
+  }
+}
+
 async function parseJsonResponse<T>(response: Response): Promise<T> {
   if (response.ok) {
     return (await response.json()) as T;
   }
 
   let message = `Request failed with ${response.status}`;
+  let code: string | null = null;
   try {
     const body = (await response.json()) as {
       detail?: string | ValidationErrorDetail[];
-      error?: { message?: string; details?: ValidationErrorDetail[] };
+      error?: { code?: string; message?: string; details?: ValidationErrorDetail[] };
     };
+    code = body.error?.code ?? null;
     if (Array.isArray(body.error?.details)) {
       message = formatValidationDetails(body.error.details) || body.error.message || message;
     } else if (body.error?.message) {
@@ -248,7 +263,7 @@ async function parseJsonResponse<T>(response: Response): Promise<T> {
   } catch {
     // Keep the status message when the server does not return JSON.
   }
-  throw new Error(message);
+  throw new ApiError(message, response.status, code);
 }
 
 function authHeaders(token: string) {
@@ -311,6 +326,13 @@ export async function fetchAdminPosts(
     headers: { Authorization: `Bearer ${token}` },
   });
   return parseJsonResponse<PostsResponse>(response);
+}
+
+export async function fetchAdminPost(token: string, postId: number): Promise<PostResponse> {
+  const response = await fetch(`${apiBaseUrl}/admin/posts/${postId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return parseJsonResponse<PostResponse>(response);
 }
 
 export async function fetchTrashPosts(

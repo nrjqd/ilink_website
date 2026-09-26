@@ -1813,3 +1813,88 @@ html.is-scroll-locked body {
   object-fit: contain;
   background: var(--color-surface-sunken);
 }
+
+/* ============================================================
+ * Post page: breadcrumb, loading, further links, 404
+ * ============================================================ */
+
+.post-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.post-breadcrumb li {
+  min-width: 0;
+}
+
+.post-breadcrumb li + li::before {
+  content: "/";
+  margin-inline: 8px;
+  color: var(--color-muted);
+}
+
+.post-breadcrumb a {
+  color: var(--color-ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgb(34 34 34 / 25%);
+}
+
+.post-breadcrumb [aria-current="page"] {
+  overflow-wrap: anywhere;
+}
+
+.post-page__status {
+  width: min(100%, 760px);
+  margin: 24px auto;
+  color: var(--color-muted);
+}
+
+.post-more-links {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid rgb(34 34 34 / 12%);
+}
+
+.post-more-links h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.post-more-links ul,
+.not-found__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.post-more-links a,
+.not-found__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  color: var(--color-ink);
+  font-weight: 800;
+}
+
+.post-more-links a:hover,
+.not-found__links a:hover {
+  color: var(--color-gold-ink);
+}
+
+.not-found p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.8;
+}

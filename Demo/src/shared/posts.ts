@@ -7,6 +7,8 @@ export type MediaItem = {
   original_url?: string;
   large_url?: string;
   thumbnail_url?: string;
+  width?: number | null;
+  height?: number | null;
 };
 
 export type PostGalleryItem = {
@@ -32,6 +34,7 @@ export type PostListItem = {
   event_date: string | null;
   status: string;
   published_at: string | null;
+  updated_at?: string | null;
 };
 
 export type PaginatedPosts = {

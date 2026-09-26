@@ -222,9 +222,9 @@ export function WorksArchivePage({ currentPath }: WorksArchivePageProps) {
   }
 
   return (
-    <main className="app-shell content-shell">
+    <div className="app-shell content-shell">
       <SiteHeader currentPath={currentPath} />
-
+      <main id="main-content">
       <section className="works-archive" aria-labelledby="works-title">
         <header className="works-archive__header">
           <p className="eyebrow">STUDENT WORKS</p>
@@ -345,8 +345,9 @@ export function WorksArchivePage({ currentPath }: WorksArchivePageProps) {
           </footer>
         ) : null}
       </section>
+      </main>
       <SiteFooter />
-    </main>
+    </div>
   );
 }
 

@@ -300,11 +300,13 @@ const yearlyProgress = [
 // 詳細註解：PageFrame 是 React 元件，負責組合資料、互動狀態與畫面結構。
 function PageFrame({ currentPath, children }: PageProps & { children: ReactNode }) {
   return (
-    <main className="app-shell content-shell">
+    <div className="app-shell content-shell">
       <SiteHeader currentPath={currentPath} />
-      {children}
+      <main id="main-content">
+        {children}
+      </main>
       <SiteFooter />
-    </main>
+    </div>
   );
 }
 

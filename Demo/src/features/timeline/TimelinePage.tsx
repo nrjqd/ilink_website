@@ -193,13 +193,13 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
   }
 
   return (
-    <main className={`app-shell ${isImmersive ? "is-immersive" : "is-content-layout"}`}>
+    <div className={`app-shell ${isImmersive ? "is-immersive" : "is-content-layout"}`}>
       <SiteHeader currentPath={currentPath} />
-
+      <main id="main-content">
       <section className="intro" id="top">
         <div>
           <p className="eyebrow">I-LINK LOCAL STORIES</p>
-          <h1>旗美內門，有哪些故事值得被看見？</h1>
+          <h1>旗山、美濃、內門，有哪些故事值得被看見？</h1>
           <span>
             從旗山老街、美濃藍染到內門宋江陣，I-LINK 把地方走讀、人物採訪、學生作品與活動成果，
             整理成一個能被分享、被搜尋、也能持續更新的地方內容平台。
@@ -326,8 +326,8 @@ export function TimelinePage({ currentPath = "/" }: TimelinePageProps) {
           <StoryGuide />
         </>
       ) : null}
-
+      </main>
       <SiteFooter />
-    </main>
+    </div>
   );
 }
